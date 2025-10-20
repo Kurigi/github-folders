@@ -84,6 +84,11 @@ h3 {
   transition: all 0.2s ease;
 }
 
+.btn-small {
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
 .btn-secondary {
   color: #24292f;
   background-color: #f6f8fa;
@@ -97,6 +102,22 @@ h3 {
 
 .btn-secondary:active {
   background-color: hsla(220, 14%, 96%, 1);
+  border-color: rgba(27, 31, 36, 0.15);
+}
+
+.btn-danger {
+  color: #ffffff;
+  background-color: #cf222e;
+  border-color: rgba(27, 31, 36, 0.15);
+}
+
+.btn-danger:hover {
+  background-color: #a40e26;
+  border-color: rgba(27, 31, 36, 0.15);
+}
+
+.btn-danger:active {
+  background-color: #8e0a1e;
   border-color: rgba(27, 31, 36, 0.15);
 }
 
@@ -162,6 +183,52 @@ li {
   color: #24292f;
 }
 
+/* Repository List */
+.repo-list {
+  margin-top: 16px;
+}
+
+.repo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background-color: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.repo-item:hover {
+  background-color: #f6f8fa;
+}
+
+.repo-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.repo-name {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: #24292f;
+}
+
+.empty-state,
+.error-state {
+  padding: 16px;
+  text-align: center;
+  color: #57606a;
+  font-style: italic;
+}
+
+.error-state {
+  color: #cf222e;
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   body {
@@ -208,5 +275,38 @@ li {
 
   li {
     color: #c9d1d9;
+  }
+
+  .repo-item {
+    background-color: #0d1117;
+    border-color: #30363d;
+  }
+
+  .repo-item:hover {
+    background-color: #161b22;
+  }
+
+  .repo-name {
+    color: #c9d1d9;
+  }
+
+  .empty-state {
+    color: #8b949e;
+  }
+
+  .error-state {
+    color: #f85149;
+  }
+
+  .btn-danger {
+    background-color: #da3633;
+  }
+
+  .btn-danger:hover {
+    background-color: #f85149;
+  }
+
+  .btn-danger:active {
+    background-color: #ff7b72;
   }
 }
