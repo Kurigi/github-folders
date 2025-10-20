@@ -63,7 +63,18 @@ async function initialize() {
       if (!configResult.content) {
         console.log('[GitHub Actions Folders] No config found, using default GitHub UI');
         restoreOriginalUI(loadingState, workflowList);
-        addToggleButton(parsed.owner, parsed.repo, workflowList, true);
+
+        // Check if user has write access to show create config button
+        const hasWriteAccess = await checkWriteAccess(parsed.owner, parsed.repo);
+
+        if (hasWriteAccess) {
+          console.log('[GitHub Actions Folders] User has write access, showing create config button');
+          addConfigButton(parsed.owner, parsed.repo, workflowList);
+        } else {
+          console.log('[GitHub Actions Folders] User does not have write access, hiding button');
+          // Don't show any button
+        }
+
         return;
       }
 

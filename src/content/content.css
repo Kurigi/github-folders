@@ -325,6 +325,19 @@
   transition: all 0.2s ease;
 }
 
+/* Create Config Button - More prominent styling */
+.gaf-create-config-button {
+  background-color: var(--color-accent-emphasis, #0969da);
+  border-color: var(--color-accent-emphasis, #0969da);
+  color: #ffffff;
+}
+
+.gaf-create-config-button:hover {
+  background-color: var(--color-accent-fg, #0550ae);
+  border-color: var(--color-accent-fg, #0550ae);
+  box-shadow: 0 2px 4px rgba(9, 105, 218, 0.3);
+}
+
 .gaf-toggle-button:hover {
   background-color: var(--color-canvas-default, #ffffff);
   border-color: var(--color-border-muted, #d0d7de);
@@ -393,6 +406,17 @@
   color: var(--color-fg-muted, #8b949e);
 }
 
+[data-color-mode="dark"] .gaf-create-config-button {
+  background-color: var(--color-accent-emphasis, #1f6feb);
+  border-color: var(--color-accent-emphasis, #1f6feb);
+}
+
+[data-color-mode="dark"] .gaf-create-config-button:hover {
+  background-color: var(--color-accent-fg, #58a6ff);
+  border-color: var(--color-accent-fg, #58a6ff);
+  box-shadow: 0 2px 4px rgba(31, 111, 235, 0.3);
+}
+
 @media (prefers-color-scheme: dark) {
   [data-color-mode="auto"] .gaf-toggle-container {
     border-top-color: var(--color-border-default, #30363d);
@@ -420,5 +444,16 @@
     background-color: var(--color-canvas-subtle, #161b22);
     border-color: var(--color-border-default, #30363d);
     color: var(--color-fg-muted, #8b949e);
+  }
+
+  [data-color-mode="auto"] .gaf-create-config-button {
+    background-color: var(--color-accent-emphasis, #1f6feb);
+    border-color: var(--color-accent-emphasis, #1f6feb);
+  }
+
+  [data-color-mode="auto"] .gaf-create-config-button:hover {
+    background-color: var(--color-accent-fg, #58a6ff);
+    border-color: var(--color-accent-fg, #58a6ff);
+    box-shadow: 0 2px 4px rgba(31, 111, 235, 0.3);
   }
 }
