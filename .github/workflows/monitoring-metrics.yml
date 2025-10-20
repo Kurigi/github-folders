@@ -1,0 +1,12 @@
+name: Collect Metrics
+on:
+  schedule:
+    - cron: '0 * * * *'
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Collect metrics
+        run: echo "Collecting system metrics..."

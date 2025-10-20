@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub Actions Folder Organizer",
+  "version": "1.0.0",
+  "description": "Organize GitHub Actions workflows into custom folders for better project organization",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://github.com/*",
+    "https://raw.githubusercontent.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*/*/actions*"],
+      "js": [
+        "src/content/constants/selectors.js",
+        "src/content/constants/config.js",
+        "src/content/core/repository-info.js",
+        "src/content/core/workflow-organizer.js",
+        "src/content/services/storage-service.js",
+        "src/content/services/messaging-service.js",
+        "src/content/ui/dom-selector.js",
+        "src/content/ui/css-injector.js",
+        "src/content/ui/loading-state.js",
+        "src/content/ui/folder-renderer.js",
+        "src/content/ui/toggle-button.js",
+        "src/content/main.js"
+      ],
+      "css": ["src/content/content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_page": "src/options/options.html"
+}

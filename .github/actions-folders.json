@@ -1,0 +1,56 @@
+{
+  "folders": [
+    {
+      "name": "Build",
+      "workflows": [
+        "build-frontend.yml",
+        "build-backend.yml",
+        "build-mobile.yml",
+        "build-docker.yml",
+        "build-docs.yml"
+      ]
+    },
+    {
+      "name": "Testing",
+      "workflows": [
+        "test-unit.yml",
+        "test-integration.yml",
+        "test-e2e.yml",
+        "test-performance.yml",
+        "test-security.yml"
+      ]
+    },
+    {
+      "name": "Deployment",
+      "workflows": [
+        "deploy-production.yml",
+        "deploy-staging.yml",
+        "deploy-preview.yml",
+        "deploy-rollback.yml"
+      ]
+    },
+    {
+      "name": "Maintenance",
+      "workflows": [
+        "maintenance-cleanup.yml",
+        "maintenance-backup.yml",
+        "maintenance-dependencies.yml",
+        "maintenance-security-scan.yml"
+      ]
+    },
+    {
+      "name": "Monitoring",
+      "workflows": [
+        "monitoring-health-check.yml",
+        "monitoring-metrics.yml"
+      ]
+    },
+    {
+      "name": "Release",
+      "workflows": [
+        "release-create.yml",
+        "release-publish.yml"
+      ]
+    }
+  ]
+}
