@@ -47,50 +47,6 @@ async function fetchWorkflows(owner, repo) {
 }
 
 /**
- * Checks user permissions for a repository
- */
-async function checkPermissions(owner, repo) {
-  const url = `https://api.github.com/repos/${owner}/${repo}`;
-  console.log(`[Service Worker] Checking permissions for: ${url}`);
-
-  try {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      console.warn(`[Service Worker] Permission check failed: ${response.status}`);
-      // If we get 404 or 403, user likely doesn't have access
-      return {
-        success: true,
-        hasWriteAccess: false
-      };
-    }
-
-    const data = await response.json();
-
-    // Check if permissions object exists and has push/admin/maintain
-    const hasWriteAccess = !!(data.permissions && (
-      data.permissions.push ||
-      data.permissions.admin ||
-      data.permissions.maintain
-    ));
-
-    console.log(`[Service Worker] Write access: ${hasWriteAccess}`);
-
-    return {
-      success: true,
-      hasWriteAccess: hasWriteAccess
-    };
-  } catch (error) {
-    console.error('[Service Worker] Failed to check permissions:', error);
-    return {
-      success: false,
-      error: error.message,
-      hasWriteAccess: false
-    };
-  }
-}
-
-/**
  * Attempts to fetch the config file from multiple default branches
  */
 async function fetchConfigFromBranches(owner, repo) {
@@ -254,34 +210,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 
-  if (request.type === 'CHECK_PERMISSIONS') {
-    const { owner, repo } = request;
-
-    if (!owner || !repo) {
-      sendResponse({
-        success: false,
-        error: 'Missing owner or repo parameter',
-        hasWriteAccess: false
-      });
-      return;
-    }
-
-    checkPermissions(owner, repo)
-      .then(result => {
-        console.log('[Service Worker] Sending permissions response');
-        sendResponse(result);
-      })
-      .catch(error => {
-        console.error('[Service Worker] Error checking permissions:', error);
-        sendResponse({
-          success: false,
-          error: error.message,
-          hasWriteAccess: false
-        });
-      });
-
-    return true;
-  }
 });
 
 // Log when service worker is activated
