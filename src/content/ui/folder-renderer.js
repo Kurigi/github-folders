@@ -8,22 +8,27 @@
  * Builds folder UI from workflow data objects
  * @param {Map} folders - Map of folder name to workflows array
  * @param {Array} uncategorized - Array of uncategorized workflows
- * @returns {HTMLElement} Container element with folder UI
+ * @param {string} owner - Repository owner
+ * @param {string} repo - Repository name
+ * @returns {Promise<HTMLElement>} Container element with folder UI
  */
-function buildFolderUIFromData(folders, uncategorized) {
+async function buildFolderUIFromData(folders, uncategorized, owner, repo) {
   const container = document.createElement('nav');
   container.className = CLASS_NAMES.folderContainer;
   container.setAttribute('aria-label', 'Organized Actions');
 
+  // Load saved folder states
+  const folderStates = await getFolderStates(owner, repo);
+
   // Create folders
   folders.forEach((workflows, folderName) => {
-    const folder = createFolderFromData(folderName, workflows);
+    const folder = createFolderFromData(folderName, workflows, owner, repo, folderStates);
     container.appendChild(folder);
   });
 
   // Add uncategorized section if needed
   if (uncategorized.length > 0) {
-    const uncatFolder = createFolderFromData('Uncategorized', uncategorized);
+    const uncatFolder = createFolderFromData('Uncategorized', uncategorized, owner, repo, folderStates);
     container.appendChild(uncatFolder);
   }
 
@@ -34,20 +39,27 @@ function buildFolderUIFromData(folders, uncategorized) {
  * Creates a folder element from workflow data objects
  * @param {string} name - Folder name
  * @param {Array} workflows - Array of workflow data objects
+ * @param {string} owner - Repository owner
+ * @param {string} repo - Repository name
+ * @param {Object} folderStates - Saved folder states
  * @returns {HTMLElement} Folder element
  */
-function createFolderFromData(name, workflows) {
+function createFolderFromData(name, workflows, owner, repo, folderStates) {
   const folder = document.createElement('div');
   folder.className = CLASS_NAMES.folder;
+
+  // Determine initial state - default to expanded (true) if not saved
+  const savedState = folderStates[name];
+  const isExpanded = savedState !== undefined ? savedState : true;
 
   // Folder header
   const header = document.createElement('button');
   header.className = CLASS_NAMES.folderHeader;
-  header.setAttribute('aria-expanded', 'true');
+  header.setAttribute('aria-expanded', String(isExpanded));
 
   const icon = document.createElement('span');
   icon.className = CLASS_NAMES.folderIcon;
-  icon.textContent = '▼';
+  icon.textContent = isExpanded ? '▼' : '▶';
 
   const title = document.createElement('span');
   title.className = CLASS_NAMES.folderTitle;
@@ -64,6 +76,7 @@ function createFolderFromData(name, workflows) {
   // Folder content
   const content = document.createElement('div');
   content.className = CLASS_NAMES.folderContent;
+  content.style.display = isExpanded ? 'block' : 'none';
 
   workflows.forEach(workflowData => {
     const link = document.createElement('a');
@@ -73,15 +86,20 @@ function createFolderFromData(name, workflows) {
     content.appendChild(link);
   });
 
-  // Toggle functionality
-  header.addEventListener('click', (event) => {
+  // Toggle functionality with state persistence
+  header.addEventListener('click', async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
     const isExpanded = header.getAttribute('aria-expanded') === 'true';
-    header.setAttribute('aria-expanded', !isExpanded);
-    content.style.display = isExpanded ? 'none' : 'block';
-    icon.textContent = isExpanded ? '▶' : '▼';
+    const newState = !isExpanded;
+
+    header.setAttribute('aria-expanded', String(newState));
+    content.style.display = newState ? 'block' : 'none';
+    icon.textContent = newState ? '▼' : '▶';
+
+    // Save the new state
+    await setFolderState(owner, repo, name, newState);
   });
 
   folder.appendChild(header);
