@@ -247,6 +247,8 @@ h3 {
 
 .token-help ol {
   margin-top: 12px;
+  padding-left: 24px;
+  padding-right: 16px;
 }
 
 .token-help li {
@@ -301,6 +303,16 @@ ul {
 li {
   margin: 8px 0;
   color: #24292f;
+}
+
+/* Links */
+a {
+  color: #0969da;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 /* Repository List */
@@ -491,5 +503,9 @@ li {
     background-color: #3d2d00;
     border-color: #9e6a03;
     color: #e3b341;
+  }
+
+  a {
+    color: #79c0ff;
   }
 }
