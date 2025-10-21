@@ -14,6 +14,7 @@ const WORKFLOW_LIST_SELECTORS = [
 
 // Selectors for finding the sidebar container
 const SIDEBAR_SELECTORS = [
+  '.PageLayout-pane',
   '.PageLayout-sidebar',
   'aside[aria-label="Actions sidebar"]',
   'aside'
