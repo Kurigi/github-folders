@@ -96,7 +96,7 @@ async function initialize() {
       );
 
       // Build folder UI (folder-renderer module)
-      const folderContainer = buildFolderUIFromData(folders, uncategorized);
+      const folderContainer = await buildFolderUIFromData(folders, uncategorized, parsed.owner, parsed.repo);
 
       // Add toggle button to the container (toggle-button module)
       const toggleButton = createToggleButton(parsed.owner, parsed.repo, true);
