@@ -1,5 +1,9 @@
 # GitHub Actions Folder Organizer
 
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/Kurigi/github-folders/releases)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Chrome Web Store](https://img.shields.io/badge/chrome-extension-blue.svg)](https://github.com/Kurigi/github-folders)
+
 Organize your GitHub Actions workflows into custom folders for better project organization. Works seamlessly with GitHub's interface and supports both public and private repositories.
 
 ![Example Screenshot](example.png)
