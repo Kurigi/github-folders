@@ -8,7 +8,8 @@
   ],
   "host_permissions": [
     "https://github.com/*",
-    "https://raw.githubusercontent.com/*"
+    "https://raw.githubusercontent.com/*",
+    "https://api.github.com/*"
   ],
   "background": {
     "service_worker": "src/background/service-worker.js"
@@ -23,6 +24,7 @@
         "src/content/core/workflow-organizer.js",
         "src/content/services/storage-service.js",
         "src/content/services/messaging-service.js",
+        "src/content/services/permissions-service.js",
         "src/content/ui/dom-selector.js",
         "src/content/ui/css-injector.js",
         "src/content/ui/loading-state.js",
