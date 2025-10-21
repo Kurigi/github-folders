@@ -8,12 +8,12 @@ Organize your GitHub Actions workflows into custom folders for better project or
 
 - 📁 **Custom folder organization** - Group workflows however you want
 - 🎨 **Native GitHub styling** - Matches GitHub's design perfectly
-- 🔒 **Private repo support** - Uses your existing GitHub session
-- ⚡ **Smart caching** - Reduces API calls and improves performance
+- 🔒 **Private repo support** - Works with both public and private repositories
+- ⚡ **Optional API token** - Better rate limits and more reliable for heavy usage
 - 🌓 **Dark mode** - Looks great in both light and dark themes
 - 🎛️ **Per-repo toggle** - Enable/disable for each repository independently
 - 💾 **Folder state memory** - Remembers which folders are expanded/collapsed
-- 🔧 **Easy config creation** - One-click button to create config file (for write access users)
+- 🔧 **Easy config creation** - One-click button to create config file
 
 ## Installation
 
@@ -67,41 +67,9 @@ That's it! Visit your repository's Actions page and your workflows will be organ
 
 ## Optional: GitHub API Token
 
-For better performance and reliability, especially with private repositories, you can add a GitHub personal access token.
+The extension works without a token, but adding one gives you better rate limits (5,000/hour vs 60/hour) and more reliable performance for private repositories.
 
-### Benefits
-
-- **Better rate limits**: 5,000 requests/hour (vs 60 without token)
-- **Private repository support**: Reliable access to private repos
-- **Cleaner permission checking**: Uses proper API instead of HTML scraping
-- **More reliable**: Consistent authentication across all API calls
-
-### How to Add a Token
-
-1. Go to [GitHub Token Settings](https://github.com/settings/tokens/new)
-2. Click "Generate new token (classic)"
-3. Give it a descriptive name (e.g., "GitHub Actions Folder Organizer")
-4. Select scope: `repo` (for full access to public and private repos)
-   - For fine-grained tokens: select `actions:read` and `contents:read`
-5. Generate and copy the token
-6. Open the extension options page:
-   - Click the extension icon and select "Open Settings"
-   - Or right-click the extension icon → Options
-7. Paste your token in the "GitHub API Token" field
-8. Click "Test Token" to verify it works
-9. Click "Save Token"
-
-### Security
-
-- Token is stored securely in Chrome's encrypted storage
-- Never logged or shared with external services
-- You can revoke the token anytime from [GitHub settings](https://github.com/settings/tokens)
-- Token is only used for GitHub API requests
-
-**Note**: The extension works perfectly for public repositories without a token! The token is only needed for:
-- Private repositories
-- Better rate limits if you use the extension frequently
-- More reliable permission checking
+**To add a token:** Click the extension icon → "Open Settings" → follow the instructions in the options page.
 
 ## Example
 
@@ -117,7 +85,7 @@ See it in action: [GitHub Folders Actions](https://github.com/Kurigi/github-fold
 **Config not loading?**
 - File must be on your default branch (`main` or `master`)
 - For private repos, make sure you're logged into GitHub
-- Try clearing the cache in the extension options page
+- Try clearing the cache: Click extension icon → "Open Settings" → "Clear All Cache"
 
 **Workflows not showing in folders?**
 - Workflow filenames are case-sensitive
@@ -125,7 +93,8 @@ See it in action: [GitHub Folders Actions](https://github.com/Kurigi/github-fold
 
 ## Options & Settings
 
-Right-click the extension icon and select **Options** to:
+Click the extension icon and select **"Open Settings"** to:
+- Add an optional GitHub API token for better performance
 - View all repositories with saved folder states
 - Clear folder states for specific repositories
 - Clear all cached config files
@@ -134,10 +103,9 @@ Right-click the extension icon and select **Options** to:
 
 - ✅ Only runs on GitHub Actions pages
 - ✅ No data sent to external servers
-- ✅ No OAuth tokens or API keys required
-- ✅ Uses your existing GitHub session for authentication
-- ✅ Config files cached locally in your browser (5-minute expiry)
-- ✅ All data stored locally in Chrome storage
+- ✅ Optional API token (stored securely in Chrome's encrypted storage)
+- ✅ Config files cached locally in your browser
+- ✅ All data stays local - nothing sent to third parties
 - ✅ Open source - inspect the code yourself
 
 ## Contributing
