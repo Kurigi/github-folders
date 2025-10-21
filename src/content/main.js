@@ -55,8 +55,7 @@ async function initialize() {
     // Remove early loading state, will be replaced with accurate one
     if (earlyLoadingState) earlyLoadingState.remove();
 
-    // Hide original list and show loading state
-    workflowList.style.display = 'none';
+    // Show loading overlay (content remains accessible underneath)
     const loadingState = showLoadingState(workflowList);
 
     try {
@@ -177,7 +176,7 @@ function cleanup() {
   }
 
   // Clean up old loading state
-  const oldLoading = document.querySelector(`.${CLASS_NAMES.loadingContainer}`);
+  const oldLoading = document.querySelector(`.${CLASS_NAMES.loadingOverlay}`);
   if (oldLoading) {
     oldLoading.remove();
   }

@@ -3,6 +3,54 @@
  * Matching GitHub's Primer CSS design system
  */
 
+/* Loading Overlay */
+.gaf-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 100;
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+.gaf-loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.gaf-loading-spinner svg {
+  animation: gaf-spin 1s linear infinite;
+  color: var(--color-fg-muted, #656d76);
+}
+
+@keyframes gaf-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dark mode support for loading overlay */
+[data-color-mode="dark"] .gaf-loading-overlay {
+  background-color: rgba(13, 17, 23, 0.8);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-color-mode="auto"] .gaf-loading-overlay {
+    background-color: rgba(13, 17, 23, 0.8);
+  }
+}
+
 /* Container */
 .gaf-folder-container {
   display: flex;

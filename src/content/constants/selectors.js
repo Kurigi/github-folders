@@ -30,9 +30,8 @@ const HIDING_CSS_SELECTORS = `
 
 // Class names used by the extension
 const CLASS_NAMES = {
-  loadingContainer: 'gaf-loading-container',
-  skeletonFolder: 'gaf-skeleton-folder',
-  skeletonHeader: 'gaf-skeleton-header',
+  loadingOverlay: 'gaf-loading-overlay',
+  loadingSpinner: 'gaf-loading-spinner',
   folderContainer: 'gaf-folder-container',
   folder: 'gaf-folder',
   folderHeader: 'gaf-folder-header',
