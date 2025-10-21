@@ -22,7 +22,9 @@
       "Bash(git clone:*)",
       "Bash(git init:*)",
       "Bash(gh auth:*)",
-      "Bash(gh repo create:*)"
+      "Bash(gh repo create:*)",
+      "mcp__playwright__browser_click",
+      "Bash(git restore:*)"
     ],
     "deny": [],
     "ask": []

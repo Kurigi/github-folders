@@ -91,49 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /**
-   * Gets all repositories that have saved folder states
-   */
-  async function getAllRepositoriesWithStates() {
-    return new Promise((resolve) => {
-      chrome.storage.local.get(null, (items) => {
-        const repos = [];
-
-        for (const key in items) {
-          if (key.startsWith('folder_states_')) {
-            // Extract owner/repo from key format: folder_states_owner_repo
-            const parts = key.replace('folder_states_', '').split('_');
-            if (parts.length >= 2) {
-              const owner = parts[0];
-              const repo = parts.slice(1).join('_'); // Handle repos with underscores
-              repos.push({ owner, repo });
-            }
-          }
-        }
-
-        // Sort alphabetically
-        repos.sort((a, b) => {
-          const aName = `${a.owner}/${a.repo}`.toLowerCase();
-          const bName = `${b.owner}/${b.repo}`.toLowerCase();
-          return aName.localeCompare(bName);
-        });
-
-        resolve(repos);
-      });
-    });
-  }
-
-  /**
-   * Clears folder states for a specific repository
-   */
-  async function clearFolderStatesForRepo(owner, repo) {
-    const key = `folder_states_${owner}_${repo}`;
-    return new Promise((resolve) => {
-      chrome.storage.local.remove([key], () => {
-        resolve();
-      });
-    });
-  }
 
   /**
    * Shows a status message
