@@ -28,6 +28,53 @@
       </section>
 
       <section class="settings-section">
+        <h2>GitHub API Token (Optional)</h2>
+        <p class="description">
+          Add a GitHub personal access token for better performance and reliability.
+          <strong>Recommended for private repositories.</strong>
+        </p>
+
+        <div class="token-input-group">
+          <input
+            type="password"
+            id="tokenInput"
+            class="token-input"
+            placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button id="testToken" class="btn btn-secondary">Test Token</button>
+        </div>
+
+        <div id="tokenStatus" class="status-message"></div>
+
+        <div class="token-actions">
+          <button id="saveToken" class="btn btn-primary">Save Token</button>
+          <button id="clearToken" class="btn btn-danger">Clear Token</button>
+        </div>
+
+        <div id="rateLimitInfo" class="info-box" style="display:none;">
+          <h3>Rate Limit Status</h3>
+          <p><strong>Remaining:</strong> <span id="rateLimitRemaining">-</span> / <span id="rateLimitTotal">-</span></p>
+          <p><strong>Resets at:</strong> <span id="rateLimitReset">-</span></p>
+        </div>
+
+        <details class="token-help">
+          <summary>How to create a token</summary>
+          <ol>
+            <li>Go to <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener noreferrer">GitHub Token Settings</a></li>
+            <li>Click "Generate new token (classic)"</li>
+            <li>Give it a descriptive name (e.g., "GitHub Actions Folder Organizer")</li>
+            <li>Select scope: <code>repo</code> (for full access)</li>
+            <li>For fine-grained tokens, select: <code>actions:read</code> and <code>contents:read</code></li>
+            <li>Generate and copy the token</li>
+            <li>Paste it above and click "Save Token"</li>
+          </ol>
+          <p class="security-note"><strong>Security:</strong> Your token is stored securely in Chrome's encrypted storage and never shared. You can revoke it anytime from GitHub settings.</p>
+        </details>
+      </section>
+
+      <section class="settings-section">
         <h2>Cache Settings</h2>
         <p class="description">
           Configuration files are cached for 5 minutes to improve performance and reduce API calls.

@@ -11,6 +11,14 @@
     "https://raw.githubusercontent.com/*",
     "https://api.github.com/*"
   ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
   "background": {
     "service_worker": "src/background/service-worker.js"
   },
@@ -22,6 +30,8 @@
         "src/content/constants/config.js",
         "src/content/core/repository-info.js",
         "src/content/core/workflow-organizer.js",
+        "src/content/services/token-service.js",
+        "src/content/services/repo-detector.js",
         "src/content/services/storage-service.js",
         "src/content/services/messaging-service.js",
         "src/content/services/permissions-service.js",
@@ -30,11 +40,20 @@
         "src/content/ui/loading-state.js",
         "src/content/ui/folder-renderer.js",
         "src/content/ui/toggle-button.js",
+        "src/content/ui/notification-banner.js",
         "src/content/main.js"
       ],
-      "css": ["src/content/content.css"],
+      "css": [
+        "src/content/content.css",
+        "src/content/ui/notification-banner.css"
+      ],
       "run_at": "document_idle"
     }
   ],
-  "options_page": "src/options/options.html"
+  "options_page": "src/options/options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
 }

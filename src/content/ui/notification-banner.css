@@ -1,0 +1,156 @@
+/**
+ * Notification Banner Styles
+ * Matches GitHub's flash message design
+ */
+
+.github-folders-notification {
+  position: relative;
+  padding: 16px;
+  margin-bottom: 16px;
+  color: var(--fgColor-default, #1f2328);
+  background-color: var(--bgColor-accent-muted, #ddf4ff);
+  border: 1px solid var(--borderColor-accent-muted, #54aeff);
+  border-radius: 6px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.notification-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.notification-text {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.5;
+  min-width: 200px;
+}
+
+.notification-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.notification-btn {
+  display: inline-block;
+  padding: 5px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid;
+  border-radius: 6px;
+  appearance: none;
+  text-decoration: none;
+  transition: 80ms cubic-bezier(0.33, 1, 0.68, 1);
+  transition-property: color, background-color, box-shadow, border-color;
+}
+
+.notification-configure {
+  color: var(--button-primary-fgColor, #ffffff);
+  background-color: var(--button-primary-bgColor, #1f883d);
+  border-color: var(--button-primary-borderColor, rgba(31, 35, 40, 0.15));
+  box-shadow: var(--button-primary-shadow, 0 1px 0 rgba(31, 35, 40, 0.1));
+}
+
+.notification-configure:hover {
+  background-color: var(--button-primary-bgColor-hover, #1a7f37);
+}
+
+.notification-configure:active {
+  background-color: var(--button-primary-bgColor-active, #187733);
+  box-shadow: var(--button-primary-shadow-selected, inset 0 1px 0 rgba(20, 70, 32, 0.2));
+}
+
+.notification-dismiss {
+  color: var(--button-default-fgColor, #24292f);
+  background-color: var(--button-default-bgColor, #f6f8fa);
+  border-color: var(--button-default-borderColor, rgba(31, 35, 40, 0.15));
+  box-shadow: var(--button-default-shadow, 0 1px 0 rgba(31, 35, 40, 0.04));
+}
+
+.notification-dismiss:hover {
+  background-color: var(--button-default-bgColor-hover, #f3f4f6);
+  border-color: var(--button-default-borderColor-hover, rgba(31, 35, 40, 0.15));
+}
+
+.notification-dismiss:active {
+  background-color: var(--button-default-bgColor-active, #edeff1);
+  box-shadow: var(--button-default-shadow-selected, inset 0 1px 0 rgba(31, 35, 40, 0.12));
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .github-folders-notification {
+    color: var(--fgColor-default, #e6edf3);
+    background-color: var(--bgColor-accent-muted, #1c2e4a);
+    border-color: var(--borderColor-accent-muted, #1f6feb);
+  }
+
+  .notification-configure {
+    color: var(--button-primary-fgColor, #ffffff);
+    background-color: var(--button-primary-bgColor, #238636);
+    border-color: var(--button-primary-borderColor, rgba(240, 246, 252, 0.1));
+  }
+
+  .notification-configure:hover {
+    background-color: var(--button-primary-bgColor-hover, #2ea043);
+  }
+
+  .notification-configure:active {
+    background-color: var(--button-primary-bgColor-active, #298e3a);
+  }
+
+  .notification-dismiss {
+    color: var(--button-default-fgColor, #c9d1d9);
+    background-color: var(--button-default-bgColor, #21262d);
+    border-color: var(--button-default-borderColor, rgba(240, 246, 252, 0.1));
+  }
+
+  .notification-dismiss:hover {
+    background-color: var(--button-default-bgColor-hover, #30363d);
+  }
+
+  .notification-dismiss:active {
+    background-color: var(--button-default-bgColor-active, #282e33);
+  }
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .notification-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .notification-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .notification-btn {
+    flex: 1;
+  }
+}

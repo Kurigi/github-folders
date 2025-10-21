@@ -16,21 +16,29 @@ github-actions-folders/
 │   │   │   ├── repository-info.js    # URL parsing and repo detection
 │   │   │   └── workflow-organizer.js # Workflow grouping logic
 │   │   ├── services/
+│   │   │   ├── token-service.js        # GitHub token storage and management
+│   │   │   ├── repo-detector.js        # Public/private repository detection
 │   │   │   ├── messaging-service.js    # Service worker communication
-│   │   │   ├── permissions-service.js  # Permission checking utilities
+│   │   │   ├── permissions-service.js  # Permission checking (API + HTML fallback)
 │   │   │   └── storage-service.js      # Chrome storage abstraction
 │   │   ├── ui/
-│   │   │   ├── dom-selector.js       # DOM element finding
-│   │   │   ├── css-injector.js       # CSS injection/removal
-│   │   │   ├── loading-state.js      # Loading skeleton UI
-│   │   │   ├── folder-renderer.js    # Folder UI generation
-│   │   │   └── toggle-button.js      # Toggle and config buttons
+│   │   │   ├── dom-selector.js            # DOM element finding
+│   │   │   ├── css-injector.js            # CSS injection/removal
+│   │   │   ├── loading-state.js           # Loading skeleton UI
+│   │   │   ├── folder-renderer.js         # Folder UI generation
+│   │   │   ├── toggle-button.js           # Toggle and config buttons
+│   │   │   ├── notification-banner.js     # Token feature notification (private repos)
+│   │   │   └── notification-banner.css    # Notification styling
 │   │   ├── main.js              # Main entry point and orchestration
 │   │   └── content.css          # Folder styles (Primer CSS variables)
 │   ├── background/
-│   │   └── service-worker.js    # Background service worker - caching & API
+│   │   └── service-worker.js    # Background service worker - caching, API, token auth
+│   ├── popup/
+│   │   ├── popup.html           # Extension popup UI
+│   │   ├── popup.js             # Popup logic and token status
+│   │   └── popup.css            # Popup styles
 │   └── options/
-│       ├── options.html         # Options page for cache management
+│       ├── options.html         # Options page (cache + token management)
 │       ├── options.js           # Options page logic
 │       └── options.css          # Options page styles
 └── icons/                        # Extension icons
@@ -41,7 +49,10 @@ github-actions-folders/
 - **Manifest V3**: Latest Chrome extension standard
 - **Vanilla JavaScript**: No frameworks - lightweight and fast
 - **Primer CSS Variables**: GitHub's design system for native look and feel
-- **GitHub Session Auth**: Uses browser's existing GitHub login (no tokens needed)
+- **Flexible Authentication**:
+  - Optional GitHub API token for better performance and private repos
+  - Falls back to session-based auth when no token is configured
+  - Smart detection: uses best available method automatically
 
 ## Development Setup
 
@@ -181,9 +192,11 @@ Use [AntoineGagnon/miryoku_zmk](https://github.com/AntoineGagnon/miryoku_zmk) fo
 - `api.github.com`: Fetch workflow data via GitHub REST API
 - `storage`: Cache configs and folder states locally for performance
 
-**No special permissions needed:**
-- Content scripts are declaratively loaded via manifest.json (no dynamic injection)
-- Uses browser's existing GitHub session (no OAuth tokens required)
+**Optional GitHub token:**
+- Token is completely optional - extension works without it for public repos
+- Token stored in `chrome.storage.sync` (encrypted by Chrome)
+- Token only used for GitHub API requests (api.github.com, raw.githubusercontent.com)
+- Provides better rate limits (5,000/hour vs 60/hour) and reliable private repo access
 
 ## Publishing Checklist
 
@@ -217,19 +230,21 @@ Use [AntoineGagnon/miryoku_zmk](https://github.com/AntoineGagnon/miryoku_zmk) fo
 - **Settings survive navigation**: State persists across page reloads
 
 ### Smart Fallbacks
-- **API + DOM extraction**: Falls back to DOM scraping for private repos when API fails
+- **Intelligent auth**: Token (if configured) → Session-based → DOM extraction
 - **Multi-branch config**: Tries both `main` and `master` branches for config files
 - **Graceful degradation**: Shows original GitHub UI if config is missing or invalid
+- **Rate limit awareness**: Tracks API rate limits, shows warnings when approaching limit
 
 ### Permission Detection
 - **Write access checking**: Shows "Create Config" button only for users with write access
-- **Multi-method detection**: Uses settings page access + DOM fallback for reliability
-- **Session-based auth**: No tokens needed, uses existing GitHub login
+- **Multi-method detection**: API endpoint (with token) → HTML endpoint → DOM fallback
+- **Flexible auth**: Supports both optional API tokens and session-based authentication
 
 ### Performance
 - **5-minute config cache**: Reduces API calls and improves load times
 - **Early loading state**: Shows skeleton UI immediately to prevent layout shift
 - **CSS-based hiding**: Prevents flash of unstyled content during initialization
+- **Better rate limits with token**: 5,000/hour with token vs 60/hour without
 
 ## Future Enhancements
 
