@@ -1,6 +1,7 @@
 /**
  * Permissions Service
  * Checks user permissions for repositories via GitHub API with DOM fallback
+ * Uses token-based API when available, falls back to HTML scraping when not
  * Follows Single Responsibility Principle - only responsible for permission checks
  */
 
@@ -23,13 +24,46 @@ function getCurrentUsername() {
 }
 
 /**
+ * Checks write access via proper GitHub API (requires token)
+ * @param {string} owner - Repository owner
+ * @param {string} repo - Repository name
+ * @param {string} username - Current user's username
+ * @returns {Promise<boolean|null>} True if has access, false if no access, null if check failed/no token
+ */
+async function checkWriteAccessViaAPI(owner, repo, username) {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage(
+      { action: 'checkPermission', owner, repo, username },
+      (response) => {
+        if (chrome.runtime.lastError) {
+          console.error('[Permissions] Runtime error:', chrome.runtime.lastError);
+          resolve(null);
+          return;
+        }
+
+        if (response && response.success) {
+          console.log(`[Permissions] API permission check result: ${response.hasWriteAccess}`);
+          resolve(response.hasWriteAccess);
+        } else if (response && response.reason === 'no_token') {
+          console.log('[Permissions] API check requires token (not available)');
+          resolve(null);
+        } else {
+          console.warn('[Permissions] API permission check failed:', response?.error);
+          resolve(null);
+        }
+      }
+    );
+  });
+}
+
+/**
  * Checks if the current user has write access to a repository by checking settings page
  * @param {string} owner - Repository owner
  * @param {string} repo - Repository name
  * @param {string} username - Current user's username (unused, kept for compatibility)
  * @returns {Promise<boolean|null>} True if has access, false if no access, null if check failed
  */
-async function checkWriteAccessFromAPI(owner, repo, username) {
+async function checkWriteAccessFromHTMLEndpoint(owner, repo, username) {
   const url = `https://github.com/${owner}/${repo}/settings`;
   console.log('[GitHub Actions Folders] Checking write access by attempting to access settings:', url);
 
@@ -69,7 +103,7 @@ async function checkWriteAccessFromAPI(owner, repo, username) {
 
 /**
  * Checks if the current user has write access to a repository
- * Tries HTML endpoint check first, falls back to DOM inspection
+ * Strategy: Try API first (requires token), then HTML endpoint, then DOM inspection
  * @param {string} owner - Repository owner
  * @param {string} repo - Repository name
  * @returns {Promise<boolean>} True if user has write access, false otherwise
@@ -79,18 +113,29 @@ async function checkWriteAccess(owner, repo) {
   const username = getCurrentUsername();
 
   if (username) {
-    // Try settings page access check
-    const htmlResult = await checkWriteAccessFromAPI(owner, repo, username);
+    // Try API first (requires token, works for any repo)
+    const apiResult = await checkWriteAccessViaAPI(owner, repo, username);
+
+    if (apiResult !== null) {
+      console.log('[GitHub Actions Folders] Write access determined via API:', apiResult);
+      return apiResult;
+    }
+
+    console.log('[GitHub Actions Folders] API check not available, trying HTML endpoint');
+
+    // Try settings page access check (fallback)
+    const htmlResult = await checkWriteAccessFromHTMLEndpoint(owner, repo, username);
 
     if (htmlResult !== null) {
       // HTML check succeeded (either true or false)
+      console.log('[GitHub Actions Folders] Write access determined via HTML endpoint:', htmlResult);
       return htmlResult;
     }
 
     console.log('[GitHub Actions Folders] HTML permission check failed, falling back to DOM');
   }
 
-  // Fallback: DOM permission check
+  // Final fallback: DOM permission check
   return checkWriteAccessFromDOM();
 }
 
@@ -142,12 +187,51 @@ function checkWriteAccessFromDOM() {
 }
 
 /**
+ * Gets default branch via proper GitHub API
+ * @param {string} owner - Repository owner
+ * @param {string} repo - Repository name
+ * @returns {Promise<string|null>} Branch name or null if failed
+ */
+async function getDefaultBranchViaAPI(owner, repo) {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage(
+      { action: 'getRepoInfo', owner, repo },
+      (response) => {
+        if (chrome.runtime.lastError) {
+          console.error('[GitHub Actions Folders] Runtime error:', chrome.runtime.lastError);
+          resolve(null);
+          return;
+        }
+
+        if (response && response.success && response.defaultBranch) {
+          console.log(`[GitHub Actions Folders] Default branch from API: ${response.defaultBranch}`);
+          resolve(response.defaultBranch);
+        } else {
+          console.warn('[GitHub Actions Folders] API branch detection failed');
+          resolve(null);
+        }
+      }
+    );
+  });
+}
+
+/**
  * Detects the default branch by fetching the repository home page
  * @param {string} owner - Repository owner
  * @param {string} repo - Repository name
  * @returns {Promise<string>} Default branch name (e.g., 'main' or 'master')
  */
 async function getDefaultBranch(owner, repo) {
+  // Try API first
+  const apiResult = await getDefaultBranchViaAPI(owner, repo);
+
+  if (apiResult) {
+    return apiResult;
+  }
+
+  console.log('[GitHub Actions Folders] API branch detection not available, falling back to HTML parsing');
+
+  // Fallback: HTML parsing
   try {
     // Fetch the repository home page (uses session cookies for private repos)
     const url = `https://github.com/${owner}/${repo}`;

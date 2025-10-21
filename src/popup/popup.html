@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Actions Folder Organizer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <div class="header">
+      <h1>GitHub Actions Folders</h1>
+      <p class="subtitle">Organize your workflows</p>
+    </div>
+
+    <div class="status-section">
+      <div class="status-item">
+        <span class="status-label">Token Status:</span>
+        <span id="tokenStatus" class="status-value">Checking...</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="openSettings" class="btn btn-primary">
+        <span class="btn-icon">⚙️</span>
+        Open Settings
+      </button>
+    </div>
+
+    <div class="footer">
+      <p class="version">v1.0.0</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

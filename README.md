@@ -65,6 +65,44 @@ That's it! Visit your repository's Actions page and your workflows will be organ
 - Click folder headers to expand/collapse them
 - Use the toggle button (bottom of sidebar) to enable/disable per repository
 
+## Optional: GitHub API Token
+
+For better performance and reliability, especially with private repositories, you can add a GitHub personal access token.
+
+### Benefits
+
+- **Better rate limits**: 5,000 requests/hour (vs 60 without token)
+- **Private repository support**: Reliable access to private repos
+- **Cleaner permission checking**: Uses proper API instead of HTML scraping
+- **More reliable**: Consistent authentication across all API calls
+
+### How to Add a Token
+
+1. Go to [GitHub Token Settings](https://github.com/settings/tokens/new)
+2. Click "Generate new token (classic)"
+3. Give it a descriptive name (e.g., "GitHub Actions Folder Organizer")
+4. Select scope: `repo` (for full access to public and private repos)
+   - For fine-grained tokens: select `actions:read` and `contents:read`
+5. Generate and copy the token
+6. Open the extension options page:
+   - Click the extension icon and select "Open Settings"
+   - Or right-click the extension icon → Options
+7. Paste your token in the "GitHub API Token" field
+8. Click "Test Token" to verify it works
+9. Click "Save Token"
+
+### Security
+
+- Token is stored securely in Chrome's encrypted storage
+- Never logged or shared with external services
+- You can revoke the token anytime from [GitHub settings](https://github.com/settings/tokens)
+- Token is only used for GitHub API requests
+
+**Note**: The extension works perfectly for public repositories without a token! The token is only needed for:
+- Private repositories
+- Better rate limits if you use the extension frequently
+- More reliable permission checking
+
 ## Example
 
 See it in action: [GitHub Folders Actions](https://github.com/Kurigi/github-folders/actions)

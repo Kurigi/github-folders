@@ -23,6 +23,12 @@ async function initialize() {
 
   console.log('[GitHub Actions Folders] On Actions page:', parsed);
 
+  // Show notification banner if appropriate (notification-banner module)
+  // This runs early and independently of the main workflow
+  showTokenNotification().catch(error => {
+    console.error('[GitHub Actions Folders] Failed to show notification:', error);
+  });
+
   // Inject hiding CSS immediately to prevent flash (css-injector module)
   injectHidingCSS();
 
