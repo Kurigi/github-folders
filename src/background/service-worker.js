@@ -111,21 +111,17 @@ async function fetchWorkflows(owner, repo) {
  */
 async function fetchConfigFromBranches(owner, repo) {
   const branches = ['main', 'master'];
-  const token = await getToken();
 
-  // Build headers
-  const headers = {};
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-    console.log(`[Service Worker] Fetching config with token authentication`);
-  }
+  // Note: raw.githubusercontent.com for public repos doesn't use Bearer tokens
+  // It relies on browser session for private repos
+  // Token authentication is only for api.github.com endpoints
 
   for (const branch of branches) {
     try {
       const url = buildRawGitHubUrl(owner, repo, branch);
       console.log(`[Service Worker] Fetching config from: ${url}`);
 
-      const response = await fetch(url, { headers });
+      const response = await fetch(url);
 
       if (response.ok) {
         const content = await response.json();
