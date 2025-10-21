@@ -1,0 +1,35 @@
+{
+  "folders": [
+    {
+      "name": "Build & Test",
+      "workflows": [
+        "ci.yml",
+        "test.yml",
+        "build.yml"
+      ]
+    },
+    {
+      "name": "Deployment",
+      "workflows": [
+        "deploy-prod.yml",
+        "deploy-staging.yml",
+        "deploy-dev.yml"
+      ]
+    },
+    {
+      "name": "Maintenance",
+      "workflows": [
+        "cleanup.yml",
+        "security-scan.yml",
+        "dependency-update.yml"
+      ]
+    },
+    {
+      "name": "Release",
+      "workflows": [
+        "release.yml",
+        "publish.yml"
+      ]
+    }
+  ]
+}

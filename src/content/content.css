@@ -1,0 +1,345 @@
+/**
+ * Styles for GitHub Actions Folder Organizer
+ * Matching GitHub's Primer CSS design system
+ */
+
+/* Container */
+.gaf-folder-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  margin: 0;
+}
+
+/* Folder */
+.gaf-folder {
+  border: 1px solid var(--color-border-default, #d0d7de);
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--color-canvas-default, #ffffff);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.gaf-folder:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .gaf-folder {
+    background-color: var(--color-canvas-default, #0d1117);
+    border-color: var(--color-border-default, #30363d);
+  }
+
+  .gaf-folder:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Folder Header */
+.gaf-folder-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 16px;
+  background: var(--color-canvas-default, #ffffff);
+  border: none;
+  cursor: pointer;
+  color: var(--color-fg-default, #24292f);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.gaf-folder-header:hover {
+  background-color: var(--color-canvas-subtle, #f6f8fa);
+}
+
+.gaf-folder-header:focus {
+  outline: 2px solid var(--color-accent-emphasis, #0969da);
+  outline-offset: -2px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .gaf-folder-header {
+    color: var(--color-fg-default, #c9d1d9);
+    background: var(--color-canvas-default, #0d1117);
+  }
+
+  .gaf-folder-header:hover {
+    background-color: var(--color-canvas-subtle, #161b22);
+  }
+}
+
+/* Folder Icon */
+.gaf-folder-icon {
+  display: inline-block;
+  width: 16px;
+  margin-right: 8px;
+  font-size: 10px;
+  color: var(--color-fg-muted, #57606a);
+  transition: transform 0.2s ease;
+}
+
+/* Folder Title */
+.gaf-folder-title {
+  flex: 1;
+  font-weight: 600;
+}
+
+/* Folder Count */
+.gaf-folder-count {
+  margin-left: 8px;
+  color: var(--color-fg-muted, #57606a);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* Folder Content */
+.gaf-folder-content {
+  display: block;
+  padding: 4px 8px 8px 8px;
+  border-top: 1px solid var(--color-border-muted, #d0d7de);
+  background-color: var(--color-canvas-subtle, #f6f8fa);
+}
+
+@media (prefers-color-scheme: dark) {
+  .gaf-folder-content {
+    background-color: var(--color-canvas-subtle, #161b22);
+    border-top-color: var(--color-border-muted, #21262d);
+  }
+}
+
+/* Workflow Links */
+.gaf-workflow-link {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  color: var(--color-fg-default, #24292f);
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 6px;
+  margin: 2px 0;
+  transition: background-color 0.2s ease;
+}
+
+.gaf-workflow-link:hover {
+  background-color: var(--color-neutral-muted, rgba(175, 184, 193, 0.2));
+  text-decoration: none;
+}
+
+.gaf-workflow-link:focus {
+  outline: 2px solid var(--color-accent-emphasis, #0969da);
+  outline-offset: -2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .gaf-workflow-link {
+    color: var(--color-fg-default, #c9d1d9);
+  }
+
+  .gaf-workflow-link:hover {
+    background-color: var(--color-neutral-muted, rgba(110, 118, 129, 0.4));
+  }
+}
+
+/* Active/Selected state */
+.gaf-workflow-link[aria-current="page"] {
+  background-color: var(--color-accent-subtle, #ddf4ff);
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  .gaf-workflow-link[aria-current="page"] {
+    background-color: var(--color-accent-subtle, #0c2d6b);
+  }
+}
+
+/* Collapsed state */
+.gaf-folder-header[aria-expanded="false"] + .gaf-folder-content {
+  display: none;
+}
+
+/* Animation for smooth expand/collapse */
+.gaf-folder-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+/* Accessibility - Focus visible */
+.gaf-folder-header:focus-visible,
+.gaf-workflow-link:focus-visible {
+  outline: 2px solid var(--color-accent-emphasis, #0969da);
+  outline-offset: -2px;
+}
+
+/* GitHub's sidebar padding override */
+.PageLayout-sidebar .gaf-folder-container {
+  margin: -16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .gaf-folder-header {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .gaf-workflow-link {
+    padding: 5px 12px;
+    font-size: 13px;
+  }
+
+  .gaf-folder-content {
+    padding-left: 20px;
+  }
+}
+
+/* Loading State */
+.gaf-loading-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  margin: 0;
+}
+
+.gaf-skeleton-folder {
+  border: 1px solid var(--color-border-default, #d0d7de);
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--color-canvas-default, #ffffff);
+}
+
+.gaf-skeleton-header {
+  height: 42px;
+  background: linear-gradient(
+    90deg,
+    var(--color-canvas-subtle, #f6f8fa) 0%,
+    var(--color-canvas-default, #ffffff) 50%,
+    var(--color-canvas-subtle, #f6f8fa) 100%
+  );
+  background-size: 200% 100%;
+  animation: gaf-skeleton-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes gaf-skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .gaf-skeleton-folder {
+    background-color: var(--color-canvas-default, #0d1117);
+    border-color: var(--color-border-default, #30363d);
+  }
+
+  .gaf-skeleton-header {
+    background: linear-gradient(
+      90deg,
+      var(--color-canvas-subtle, #161b22) 0%,
+      var(--color-canvas-default, #0d1117) 50%,
+      var(--color-canvas-subtle, #161b22) 100%
+    );
+  }
+}
+
+/* Toggle Button */
+.gaf-toggle-container {
+  padding: 16px 8px 8px 8px;
+  margin-top: 8px;
+  border-top: 1px solid var(--color-border-default, #d0d7de);
+}
+
+.gaf-toggle-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 8px 16px;
+  background-color: var(--color-canvas-subtle, #f6f8fa);
+  border: 1px solid var(--color-border-default, #d0d7de);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-fg-muted, #57606a);
+  transition: all 0.2s ease;
+}
+
+.gaf-toggle-button:hover {
+  background-color: var(--color-canvas-default, #ffffff);
+  border-color: var(--color-border-muted, #d0d7de);
+  color: var(--color-fg-default, #24292f);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.gaf-toggle-button:focus {
+  outline: 2px solid var(--color-accent-emphasis, #0969da);
+  outline-offset: 2px;
+}
+
+.gaf-toggle-button:active {
+  transform: scale(0.98);
+}
+
+.gaf-toggle-button[aria-pressed="true"] {
+  background-color: var(--color-success-subtle, #dafbe1);
+  border-color: var(--color-success-emphasis, #1a7f37);
+  color: var(--color-success-fg, #1a7f37);
+}
+
+.gaf-toggle-button[aria-pressed="false"] {
+  background-color: var(--color-neutral-subtle, #f6f8fa);
+  border-color: var(--color-border-default, #d0d7de);
+  color: var(--color-fg-muted, #57606a);
+}
+
+.gaf-toggle-icon {
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.gaf-toggle-label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+@media (prefers-color-scheme: dark) {
+  .gaf-toggle-container {
+    border-top-color: var(--color-border-default, #30363d);
+  }
+
+  .gaf-toggle-button {
+    background-color: var(--color-canvas-subtle, #161b22);
+    border-color: var(--color-border-default, #30363d);
+    color: var(--color-fg-muted, #8b949e);
+  }
+
+  .gaf-toggle-button:hover {
+    background-color: var(--color-canvas-default, #0d1117);
+    border-color: var(--color-border-muted, #30363d);
+    color: var(--color-fg-default, #c9d1d9);
+  }
+
+  .gaf-toggle-button[aria-pressed="true"] {
+    background-color: var(--color-success-subtle, #033a16);
+    border-color: var(--color-success-emphasis, #2ea043);
+    color: var(--color-success-fg, #3fb950);
+  }
+
+  .gaf-toggle-button[aria-pressed="false"] {
+    background-color: var(--color-canvas-subtle, #161b22);
+    border-color: var(--color-border-default, #30363d);
+    color: var(--color-fg-muted, #8b949e);
+  }
+}

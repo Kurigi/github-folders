@@ -1,0 +1,12 @@
+name: Cleanup Resources
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Cleanup resources
+        run: echo "Cleaning up old resources..."

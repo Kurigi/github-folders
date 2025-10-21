@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Actions Folder Organizer - Options</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>GitHub Actions Folder Organizer</h1>
+      <p class="subtitle">Configure your extension settings</p>
+    </header>
+
+    <main>
+      <section class="settings-section">
+        <h2>Cache Settings</h2>
+        <p class="description">
+          Configuration files are cached for 5 minutes to improve performance and reduce API calls.
+        </p>
+
+        <button id="clearAllCache" class="btn btn-secondary">
+          Clear All Cache
+        </button>
+
+        <div id="cacheStatus" class="status-message"></div>
+      </section>
+
+      <section class="settings-section">
+        <h2>About</h2>
+        <p class="description">
+          This extension organizes your GitHub Actions workflows into custom folders based on a configuration file
+          in your repository (<code>.github/actions-folders.json</code>).
+        </p>
+
+        <h3>Configuration File Format</h3>
+        <pre><code>{
+  "folders": [
+    {
+      "name": "Build & Test",
+      "workflows": [
+        "ci.yml",
+        "test.yml"
+      ]
+    },
+    {
+      "name": "Deployment",
+      "workflows": [
+        "deploy-prod.yml",
+        "deploy-staging.yml"
+      ]
+    }
+  ]
+}</code></pre>
+
+        <h3>Features</h3>
+        <ul>
+          <li>Organize workflows into collapsible folders</li>
+          <li>Works with public and private repositories</li>
+          <li>Automatic caching for better performance</li>
+          <li>Fallback to default GitHub UI if config is missing</li>
+          <li>Matches GitHub's design system</li>
+        </ul>
+      </section>
+
+      <section class="settings-section">
+        <h2>Support</h2>
+        <p class="description">
+          Version: 1.0.0
+        </p>
+        <p class="description">
+          For issues or feature requests, please visit the project repository.
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

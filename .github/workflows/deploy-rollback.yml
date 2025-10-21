@@ -1,0 +1,10 @@
+name: Rollback Deployment
+on: workflow_dispatch
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Rollback deployment
+        run: echo "Rolling back deployment..."

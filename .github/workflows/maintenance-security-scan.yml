@@ -1,0 +1,12 @@
+name: Security Scan
+on:
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run security scan
+        run: echo "Running security scan..."
