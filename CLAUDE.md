@@ -9,18 +9,30 @@ github-actions-folders/
 ├── manifest.json                 # Extension manifest (Manifest V3)
 ├── src/
 │   ├── content/
-│   │   ├── content.js           # Main content script - handles DOM manipulation
+│   │   ├── constants/
+│   │   │   ├── selectors.js     # DOM selectors and CSS class names
+│   │   │   └── config.js        # Extension configuration constants
+│   │   ├── core/
+│   │   │   ├── repository-info.js    # URL parsing and repo detection
+│   │   │   └── workflow-organizer.js # Workflow grouping logic
+│   │   ├── services/
+│   │   │   ├── messaging-service.js    # Service worker communication
+│   │   │   ├── permissions-service.js  # Permission checking utilities
+│   │   │   └── storage-service.js      # Chrome storage abstraction
+│   │   ├── ui/
+│   │   │   ├── dom-selector.js       # DOM element finding
+│   │   │   ├── css-injector.js       # CSS injection/removal
+│   │   │   ├── loading-state.js      # Loading skeleton UI
+│   │   │   ├── folder-renderer.js    # Folder UI generation
+│   │   │   └── toggle-button.js      # Toggle and config buttons
+│   │   ├── main.js              # Main entry point and orchestration
 │   │   └── content.css          # Folder styles (Primer CSS variables)
 │   ├── background/
-│   │   └── service-worker.js    # Background service worker - caching & API coordination
-│   ├── options/
-│   │   ├── options.html         # Options page for cache management
-│   │   ├── options.js           # Options page logic
-│   │   └── options.css          # Options page styles
-│   └── utils/
-│       ├── github-api.js        # GitHub API utilities (raw.githubusercontent.com)
-│       ├── config-parser.js     # JSON config parser
-│       └── url-parser.js        # URL parsing for repo detection
+│   │   └── service-worker.js    # Background service worker - caching & API
+│   └── options/
+│       ├── options.html         # Options page for cache management
+│       ├── options.js           # Options page logic
+│       └── options.css          # Options page styles
 └── icons/                        # Extension icons
 ```
 
@@ -42,21 +54,40 @@ github-actions-folders/
 
 ## Architecture
 
-### Content Script (`content.js`)
+### Modular Design
 
+The extension follows SOLID principles with a modular architecture:
+
+**Content Scripts** (loaded in order per manifest.json):
+1. **Constants** - Configuration and selectors
+2. **Core** - Business logic (URL parsing, workflow organization)
+3. **Services** - External interactions (storage, messaging, permissions)
+4. **UI** - DOM manipulation and rendering
+5. **Main** - Entry point and orchestration
+
+### Content Script (`main.js`)
+
+- Entry point that orchestrates all modules
 - Runs on GitHub Actions pages
 - Detects URL changes (GitHub is a SPA)
-- Fetches config via service worker
-- Manipulates DOM to create folder structure
-- Handles expand/collapse state
-- Matches Primer CSS styling
+- Coordinates initialization workflow
+- Handles cleanup on navigation
+- Manages enable/disable state per repository
 
 ### Service Worker (`service-worker.js`)
 
-- Coordinates GitHub API requests
-- Implements caching layer (reduces API calls)
+- Coordinates GitHub API requests (workflows endpoint)
+- Implements caching layer for config files (5-minute cache)
 - Handles chrome.storage management
-- Provides messaging interface to content script
+- Provides messaging interface to content scripts
+- Tries multiple default branches (main, master) for config files
+
+### Module Responsibilities
+
+**Constants**: Configuration values, DOM selectors, CSS class names
+**Core**: Repository info parsing, workflow-to-folder grouping logic
+**Services**: Chrome API abstractions (storage, messaging), permission checks
+**UI**: DOM selection, CSS injection, loading states, folder rendering
 
 ### Config Format
 
@@ -147,8 +178,12 @@ Use [AntoineGagnon/miryoku_zmk](https://github.com/AntoineGagnon/miryoku_zmk) fo
 
 - `github.com`: Detect Actions pages and inject content script
 - `raw.githubusercontent.com`: Fetch config files from repositories
-- `storage`: Cache configs locally for performance
-- `scripting`: Inject content script dynamically (Manifest V3 requirement)
+- `api.github.com`: Fetch workflow data via GitHub REST API
+- `storage`: Cache configs and folder states locally for performance
+
+**No special permissions needed:**
+- Content scripts are declaratively loaded via manifest.json (no dynamic injection)
+- Uses browser's existing GitHub session (no OAuth tokens required)
 
 ## Publishing Checklist
 
@@ -164,12 +199,37 @@ Use [AntoineGagnon/miryoku_zmk](https://github.com/AntoineGagnon/miryoku_zmk) fo
 
 ## Code Style
 
+- **SOLID Principles**: Each module has a single responsibility
+- **Dependency Inversion**: Modules depend on abstractions, not implementations
+- **Modular Architecture**: Features separated into logical modules
 - Use `const` for all variables unless mutation is required
 - Prefer functional patterns over classes
 - Keep functions small and single-purpose
-- Comment complex DOM manipulation logic
+- Comment module purpose and complex logic
 - Use descriptive variable names
 - Follow existing code formatting
+
+## Key Features
+
+### Repository-Specific Settings
+- **Per-repo enable/disable**: Toggle extension on/off for each repository
+- **Folder state persistence**: Remembers which folders are expanded/collapsed
+- **Settings survive navigation**: State persists across page reloads
+
+### Smart Fallbacks
+- **API + DOM extraction**: Falls back to DOM scraping for private repos when API fails
+- **Multi-branch config**: Tries both `main` and `master` branches for config files
+- **Graceful degradation**: Shows original GitHub UI if config is missing or invalid
+
+### Permission Detection
+- **Write access checking**: Shows "Create Config" button only for users with write access
+- **Multi-method detection**: Uses settings page access + DOM fallback for reliability
+- **Session-based auth**: No tokens needed, uses existing GitHub login
+
+### Performance
+- **5-minute config cache**: Reduces API calls and improves load times
+- **Early loading state**: Shows skeleton UI immediately to prevent layout shift
+- **CSS-based hiding**: Prevents flash of unstyled content during initialization
 
 ## Future Enhancements
 

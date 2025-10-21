@@ -46,6 +46,7 @@ async function fetchWorkflows(owner, repo) {
   }
 }
 
+
 /**
  * Attempts to fetch the config file from multiple default branches
  */
