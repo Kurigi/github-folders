@@ -74,11 +74,11 @@ function createConfigButton(owner, repo) {
   buttonContainer.appendChild(button);
 
   // Handle button click - navigate to GitHub's file creation page
-  button.addEventListener('click', (event) => {
+  button.addEventListener('click', async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const configUrl = buildConfigCreationUrl(owner, repo);
+    const configUrl = await buildConfigCreationUrl(owner, repo);
     console.log('[GitHub Actions Folders] Navigating to config creation:', configUrl);
 
     // Navigate in same tab

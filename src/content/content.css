@@ -329,13 +329,19 @@
 .gaf-create-config-button {
   background-color: var(--color-accent-emphasis, #0969da);
   border-color: var(--color-accent-emphasis, #0969da);
-  color: #ffffff;
+  color: #ffffff !important;
+}
+
+.gaf-create-config-button .gaf-toggle-label,
+.gaf-create-config-button .gaf-toggle-icon {
+  color: #ffffff !important;
 }
 
 .gaf-create-config-button:hover {
   background-color: var(--color-accent-fg, #0550ae);
   border-color: var(--color-accent-fg, #0550ae);
   box-shadow: 0 2px 4px rgba(9, 105, 218, 0.3);
+  color: #ffffff !important;
 }
 
 .gaf-toggle-button:hover {
@@ -409,12 +415,19 @@
 [data-color-mode="dark"] .gaf-create-config-button {
   background-color: var(--color-accent-emphasis, #1f6feb);
   border-color: var(--color-accent-emphasis, #1f6feb);
+  color: #ffffff !important;
+}
+
+[data-color-mode="dark"] .gaf-create-config-button .gaf-toggle-label,
+[data-color-mode="dark"] .gaf-create-config-button .gaf-toggle-icon {
+  color: #ffffff !important;
 }
 
 [data-color-mode="dark"] .gaf-create-config-button:hover {
   background-color: var(--color-accent-fg, #58a6ff);
   border-color: var(--color-accent-fg, #58a6ff);
   box-shadow: 0 2px 4px rgba(31, 111, 235, 0.3);
+  color: #ffffff !important;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -449,11 +462,18 @@
   [data-color-mode="auto"] .gaf-create-config-button {
     background-color: var(--color-accent-emphasis, #1f6feb);
     border-color: var(--color-accent-emphasis, #1f6feb);
+    color: #ffffff !important;
+  }
+
+  [data-color-mode="auto"] .gaf-create-config-button .gaf-toggle-label,
+  [data-color-mode="auto"] .gaf-create-config-button .gaf-toggle-icon {
+    color: #ffffff !important;
   }
 
   [data-color-mode="auto"] .gaf-create-config-button:hover {
     background-color: var(--color-accent-fg, #58a6ff);
     border-color: var(--color-accent-fg, #58a6ff);
     box-shadow: 0 2px 4px rgba(31, 111, 235, 0.3);
+    color: #ffffff !important;
   }
 }
