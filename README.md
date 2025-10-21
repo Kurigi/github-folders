@@ -2,7 +2,7 @@
 
 Organize your GitHub Actions workflows into custom folders for better project organization. Works seamlessly with GitHub's interface and supports both public and private repositories.
 
-![Example Screenshot](https://via.placeholder.com/800x400?text=Screenshot+Coming+Soon)
+![Example Screenshot](example.png)
 
 ## Features
 
