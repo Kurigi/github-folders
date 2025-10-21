@@ -1,40 +1,101 @@
 /**
  * Permissions Service
- * Checks user permissions for repositories
+ * Checks user permissions for repositories via GitHub API with DOM fallback
  * Follows Single Responsibility Principle - only responsible for permission checks
  */
 
 /**
+ * Gets the current GitHub username from the DOM
+ * @returns {string|null} Username if found, null otherwise
+ */
+function getCurrentUsername() {
+  // Try to get username from user avatar button
+  const userAvatar = document.querySelector('[data-target="user-avatar-button.menu"]');
+  if (userAvatar) {
+    const img = userAvatar.querySelector('img[alt^="@"]');
+    if (img) {
+      const alt = img.getAttribute('alt');
+      // Alt text is "@username"
+      const username = alt.replace('@', '');
+      console.log('[GitHub Actions Folders] Found username from avatar:', username);
+      return username;
+    }
+  }
+
+  // Fallback: try to get from profile link in user menu
+  const profileLink = document.querySelector('[data-target="user-avatar-button.menu"] + div a[href^="/"][href*="/"]');
+  if (profileLink) {
+    const href = profileLink.getAttribute('href');
+    const username = href.split('/')[1];
+    if (username) {
+      console.log('[GitHub Actions Folders] Found username from profile link:', username);
+      return username;
+    }
+  }
+
+  console.log('[GitHub Actions Folders] Could not find username from DOM');
+  return null;
+}
+
+/**
+ * Checks if the current user has write access to a repository via GitHub API
+ * @param {string} owner - Repository owner
+ * @param {string} repo - Repository name
+ * @param {string} username - Current user's username
+ * @returns {Promise<boolean|null>} True if has access, false if no access, null if check failed
+ */
+async function checkWriteAccessFromAPI(owner, repo, username) {
+  const url = `https://api.github.com/repos/${owner}/${repo}/collaborators/${username}`;
+  console.log('[GitHub Actions Folders] Checking permissions via API:', url);
+
+  try {
+    const response = await fetch(url, {
+      credentials: 'include' // Include cookies for authentication
+    });
+
+    if (response.status === 204) {
+      console.log('[GitHub Actions Folders] API confirms write access (204 No Content)');
+      return true;
+    } else if (response.status === 404) {
+      console.log('[GitHub Actions Folders] API confirms no write access (404 Not Found)');
+      return false;
+    } else {
+      console.warn('[GitHub Actions Folders] API returned unexpected status:', response.status);
+      return null; // Unknown state, fall back to DOM
+    }
+  } catch (error) {
+    console.warn('[GitHub Actions Folders] API check failed:', error);
+    return null; // Error, fall back to DOM
+  }
+}
+
+/**
  * Checks if the current user has write access to a repository
+ * Tries API first, falls back to DOM inspection
  * @param {string} owner - Repository owner
  * @param {string} repo - Repository name
  * @returns {Promise<boolean>} True if user has write access, false otherwise
  */
 async function checkWriteAccess(owner, repo) {
-  try {
-    // Send message to service worker to check permissions via GitHub API
-    const response = await chrome.runtime.sendMessage({
-      type: 'CHECK_PERMISSIONS',
-      owner: owner,
-      repo: repo
-    });
+  // First, get the current username
+  const username = getCurrentUsername();
 
-    console.log('[GitHub Actions Folders] API permission check response:', response);
+  if (username) {
+    // Try API check first
+    const apiResult = await checkWriteAccessFromAPI(owner, repo, username);
 
-    if (response && response.hasWriteAccess !== undefined) {
-      console.log('[GitHub Actions Folders] Using API result:', response.hasWriteAccess);
-      return response.hasWriteAccess;
+    if (apiResult !== null) {
+      // API check succeeded (either true or false)
+      return apiResult;
     }
 
-    // Fallback: try to detect from DOM if user is logged in and has access
-    console.log('[GitHub Actions Folders] API check inconclusive, falling back to DOM detection');
-    return checkWriteAccessFromDOM();
-  } catch (error) {
-    console.warn('[GitHub Actions Folders] Error checking permissions:', error);
-    // On error, fallback to DOM detection instead of hiding button
-    console.log('[GitHub Actions Folders] Error in API check, falling back to DOM detection');
-    return checkWriteAccessFromDOM();
+    console.log('[GitHub Actions Folders] API check failed, falling back to DOM');
+  } else {
+    console.log('[GitHub Actions Folders] No username found, using DOM check only');
   }
+
+  // Fall back to DOM check
+  return checkWriteAccessFromDOM();
 }
 
 /**
