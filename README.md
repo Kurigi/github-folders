@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/Kurigi/github-folders/releases)
 [![License](https://img.shields.io/badge/license-GPL--v3-blue.svg)](LICENSE)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Available-brightgreen.svg?logo=googlechrome)](https://chromewebstore.google.com/detail/github-actions-folder-org/cjaleaniaichaneokpblfjnafkcahcjo)
-[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-orange.svg?logo=firefox)](https://github.com/Kurigi/github-folders)
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-orange.svg?logo=firefox)](https://addons.mozilla.org/en-CA/firefox/addon/github-actions-folder-organize/)
 
 Organize your GitHub Actions workflows into custom folders for better project organization. Works seamlessly with GitHub's interface and supports both public and private repositories.
 
@@ -30,7 +30,7 @@ Organize your GitHub Actions workflows into custom folders for better project or
 Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/github-actions-folder-org/cjaleaniaichaneokpblfjnafkcahcjo)
 
 **Firefox:**
-Coming soon to Firefox Add-ons (submitted for review)
+Install from [Firefox Add-ons](https://addons.mozilla.org/en-CA/firefox/addon/github-actions-folder-organize/)
 
 ### Load Locally
 
