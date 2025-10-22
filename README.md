@@ -1,7 +1,7 @@
 # GitHub Actions Folder Organizer
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/Kurigi/github-folders/releases)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-GPL--v3-blue.svg)](LICENSE)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Available-brightgreen.svg?logo=googlechrome)](https://chromewebstore.google.com/detail/github-actions-folder-org/cjaleaniaichaneokpblfjnafkcahcjo)
 [![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-orange.svg?logo=firefox)](https://github.com/Kurigi/github-folders)
 
@@ -137,7 +137,7 @@ For development setup and architecture details, see [CLAUDE.md](./CLAUDE.md).
 
 ## License
 
-MIT License - See [LICENSE](./LICENSE) file for details.
+GPL v3 License - See [LICENSE](./LICENSE) file for details.
 
 ---
 
