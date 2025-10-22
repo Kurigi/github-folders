@@ -11,11 +11,8 @@
  */
 async function getExtensionEnabled(owner, repo) {
   const key = `enabled_${owner}_${repo}`;
-  return new Promise((resolve) => {
-    chrome.storage.local.get([key], (result) => {
-      resolve(result[key] !== false);
-    });
-  });
+  const result = await browser.storage.local.get(key);
+  return result[key] !== false;
 }
 
 /**
@@ -27,11 +24,7 @@ async function getExtensionEnabled(owner, repo) {
  */
 async function setExtensionEnabled(owner, repo, enabled) {
   const key = `enabled_${owner}_${repo}`;
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ [key]: enabled }, () => {
-      resolve();
-    });
-  });
+  await browser.storage.local.set({ [key]: enabled });
 }
 
 /**
@@ -42,11 +35,8 @@ async function setExtensionEnabled(owner, repo, enabled) {
  */
 async function getFolderStates(owner, repo) {
   const key = `folder_states_${owner}_${repo}`;
-  return new Promise((resolve) => {
-    chrome.storage.local.get([key], (result) => {
-      resolve(result[key] || {});
-    });
-  });
+  const result = await browser.storage.local.get(key);
+  return result[key] || {};
 }
 
 /**
@@ -61,12 +51,7 @@ async function setFolderState(owner, repo, folderName, isExpanded) {
   const key = `folder_states_${owner}_${repo}`;
   const states = await getFolderStates(owner, repo);
   states[folderName] = isExpanded;
-
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ [key]: states }, () => {
-      resolve();
-    });
-  });
+  await browser.storage.local.set({ [key]: states });
 }
 
 /**
@@ -74,24 +59,21 @@ async function setFolderState(owner, repo, folderName, isExpanded) {
  * @returns {Promise<Array<{owner: string, repo: string}>>} Array of repository info
  */
 async function getAllRepositoriesWithStates() {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(null, (items) => {
-      const repos = [];
+  const items = await browser.storage.local.get(null);
+  const repos = [];
 
-      for (const key in items) {
-        if (key.startsWith('folder_states_')) {
-          const parts = key.replace('folder_states_', '').split('_');
-          if (parts.length >= 2) {
-            const owner = parts[0];
-            const repo = parts.slice(1).join('_');
-            repos.push({ owner, repo });
-          }
-        }
+  for (const key in items) {
+    if (key.startsWith('folder_states_')) {
+      const parts = key.replace('folder_states_', '').split('_');
+      if (parts.length >= 2) {
+        const owner = parts[0];
+        const repo = parts.slice(1).join('_');
+        repos.push({ owner, repo });
       }
+    }
+  }
 
-      resolve(repos);
-    });
-  });
+  return repos;
 }
 
 /**
@@ -102,9 +84,5 @@ async function getAllRepositoriesWithStates() {
  */
 async function clearFolderStatesForRepo(owner, repo) {
   const key = `folder_states_${owner}_${repo}`;
-  return new Promise((resolve) => {
-    chrome.storage.local.remove([key], () => {
-      resolve();
-    });
-  });
+  await browser.storage.local.remove(key);
 }

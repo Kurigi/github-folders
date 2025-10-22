@@ -4,6 +4,11 @@
  * Supports optional GitHub token for better performance and private repo access
  */
 
+// Chrome service workers use importScripts, Firefox loads via scripts array in manifest
+if (typeof importScripts === 'function') {
+  importScripts('/lib/browser-polyfill.min.js');
+}
+
 const CONFIG_FILE_PATH = '.github/actions-folders.json';
 const CACHE_DURATION_MS = 5 * 60 * 1000;
 const TOKEN_STORAGE_KEY = 'github_token';
@@ -14,7 +19,7 @@ const TOKEN_STORAGE_KEY = 'github_token';
  */
 async function getToken() {
   try {
-    const result = await chrome.storage.sync.get(TOKEN_STORAGE_KEY);
+    const result = await browser.storage.sync.get(TOKEN_STORAGE_KEY);
     return result[TOKEN_STORAGE_KEY] || null;
   } catch (error) {
     console.error('[Service Worker] Failed to retrieve token:', error);
@@ -32,7 +37,7 @@ function trackRateLimit(headers) {
   const reset = headers.get('X-RateLimit-Reset');
 
   if (limit && remaining && reset) {
-    chrome.storage.local.set({
+    browser.storage.local.set({
       rate_limit: {
         limit: parseInt(limit),
         remaining: parseInt(remaining),
@@ -134,7 +139,7 @@ async function fetchConfigWithCache(owner, repo) {
   const cacheTimestampKey = `${cacheKey}_timestamp`;
 
   try {
-    const cached = await chrome.storage.local.get([cacheKey, cacheTimestampKey]);
+    const cached = await browser.storage.local.get([cacheKey, cacheTimestampKey]);
     const cachedContent = cached[cacheKey];
     const cachedTimestamp = cached[cacheTimestampKey];
 
@@ -153,7 +158,7 @@ async function fetchConfigWithCache(owner, repo) {
     console.log(`[Service Worker] Fetching fresh config for ${owner}/${repo}`);
     const content = await fetchConfigFromBranches(owner, repo);
 
-    await chrome.storage.local.set({
+    await browser.storage.local.set({
       [cacheKey]: content,
       [cacheTimestampKey]: Date.now()
     });
@@ -286,11 +291,11 @@ async function clearConfigCache(owner, repo) {
   const cacheKey = `config_${owner}_${repo}`;
   const cacheTimestampKey = `${cacheKey}_timestamp`;
 
-  await chrome.storage.local.remove([cacheKey, cacheTimestampKey]);
+  await browser.storage.local.remove([cacheKey, cacheTimestampKey]);
   console.log(`[Service Worker] Cache cleared for ${owner}/${repo}`);
 }
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('[Service Worker] Received message:', request);
 
   if (request.action === 'fetchConfig') {

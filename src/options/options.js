@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      await chrome.storage.sync.set({ github_token: token });
+      await browser.storage.sync.set({ github_token: token });
       showStatus(tokenStatus, '✅ Token saved successfully', 'success');
       tokenInput.value = ''; // Clear input for security
       loadTokenStatus(); // Reload status
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Token: Clear button
   clearTokenBtn.addEventListener('click', async () => {
     try {
-      await chrome.storage.sync.remove('github_token');
+      await browser.storage.sync.remove('github_token');
       showStatus(tokenStatus, 'Token cleared successfully', 'success');
       rateLimitInfo.style.display = 'none';
       tokenInput.value = '';
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
   clearCacheBtn.addEventListener('click', async () => {
     try {
       // Clear all storage
-      await chrome.storage.local.clear();
+      await browser.storage.local.clear();
 
       // Show success message
       showStatus(cacheStatus, 'All cache cleared successfully!', 'success');
@@ -168,13 +168,13 @@ document.addEventListener('DOMContentLoaded', () => {
    */
   async function loadTokenStatus() {
     try {
-      const stored = await chrome.storage.sync.get('github_token');
+      const stored = await browser.storage.sync.get('github_token');
 
       if (stored.github_token && stored.github_token.length > 0) {
         showStatus(tokenStatus, '✅ Token configured (masked for security)', 'success');
 
         // Load and display rate limit if available
-        const rateLimit = await chrome.storage.local.get('rate_limit');
+        const rateLimit = await browser.storage.local.get('rate_limit');
         if (rateLimit.rate_limit) {
           displayRateLimit(rateLimit.rate_limit);
         }

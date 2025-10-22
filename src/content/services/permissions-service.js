@@ -29,29 +29,28 @@ function getCurrentUsername() {
  * @returns {Promise<boolean|null>} True if has access, false if no access, null if check failed/no token
  */
 async function checkWriteAccessViaAPI(owner, repo, username) {
-  return new Promise((resolve) => {
-    chrome.runtime.sendMessage(
-      { action: 'checkPermission', owner, repo, username },
-      (response) => {
-        if (chrome.runtime.lastError) {
-          console.error('[Permissions] Runtime error:', chrome.runtime.lastError);
-          resolve(null);
-          return;
-        }
+  try {
+    const response = await browser.runtime.sendMessage({
+      action: 'checkPermission',
+      owner,
+      repo,
+      username
+    });
 
-        if (response && response.success) {
-          console.log(`[Permissions] API permission check result: ${response.hasWriteAccess}`);
-          resolve(response.hasWriteAccess);
-        } else if (response && response.reason === 'no_token') {
-          console.log('[Permissions] API check requires token (not available)');
-          resolve(null);
-        } else {
-          console.warn('[Permissions] API permission check failed:', response?.error);
-          resolve(null);
-        }
-      }
-    );
-  });
+    if (response && response.success) {
+      console.log(`[Permissions] API permission check result: ${response.hasWriteAccess}`);
+      return response.hasWriteAccess;
+    } else if (response && response.reason === 'no_token') {
+      console.log('[Permissions] API check requires token (not available)');
+      return null;
+    } else {
+      console.warn('[Permissions] API permission check failed:', response?.error);
+      return null;
+    }
+  } catch (error) {
+    console.error('[Permissions] Runtime error:', error);
+    return null;
+  }
 }
 
 /**
@@ -183,26 +182,24 @@ function checkWriteAccessFromDOM() {
  * @returns {Promise<string|null>} Branch name or null if failed
  */
 async function getDefaultBranchViaAPI(owner, repo) {
-  return new Promise((resolve) => {
-    chrome.runtime.sendMessage(
-      { action: 'getRepoInfo', owner, repo },
-      (response) => {
-        if (chrome.runtime.lastError) {
-          console.error('[GitHub Actions Folders] Runtime error:', chrome.runtime.lastError);
-          resolve(null);
-          return;
-        }
+  try {
+    const response = await browser.runtime.sendMessage({
+      action: 'getRepoInfo',
+      owner,
+      repo
+    });
 
-        if (response && response.success && response.defaultBranch) {
-          console.log(`[GitHub Actions Folders] Default branch from API: ${response.defaultBranch}`);
-          resolve(response.defaultBranch);
-        } else {
-          console.warn('[GitHub Actions Folders] API branch detection failed');
-          resolve(null);
-        }
-      }
-    );
-  });
+    if (response && response.success && response.defaultBranch) {
+      console.log(`[GitHub Actions Folders] Default branch from API: ${response.defaultBranch}`);
+      return response.defaultBranch;
+    } else {
+      console.warn('[GitHub Actions Folders] API branch detection failed');
+      return null;
+    }
+  } catch (error) {
+    console.error('[GitHub Actions Folders] Runtime error:', error);
+    return null;
+  }
 }
 
 /**

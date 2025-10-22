@@ -9,15 +9,12 @@
  * @returns {Promise<Object>} Response from service worker
  */
 async function sendMessage(message) {
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(message, (response) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      resolve(response);
-    });
-  });
+  try {
+    const response = await browser.runtime.sendMessage(message);
+    return response;
+  } catch (error) {
+    throw new Error(error.message || 'Failed to send message');
+  }
 }
 
 /**

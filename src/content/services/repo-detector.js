@@ -53,7 +53,7 @@ function isPrivateRepo() {
  */
 async function cacheRepoVisibility(owner, repo, isPrivate) {
   const cacheKey = `repo_visibility_${owner}_${repo}`;
-  await chrome.storage.local.set({
+  await browser.storage.local.set({
     [cacheKey]: {
       isPrivate,
       timestamp: Date.now()
@@ -74,7 +74,7 @@ async function getCachedVisibility(owner, repo) {
   const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour
 
   try {
-    const result = await chrome.storage.local.get(cacheKey);
+    const result = await browser.storage.local.get(cacheKey);
     const cached = result[cacheKey];
 
     if (cached && cached.timestamp) {
@@ -124,7 +124,7 @@ async function getRepoVisibility(owner, repo) {
  */
 async function clearRepoVisibilityCache(owner, repo) {
   const cacheKey = `repo_visibility_${owner}_${repo}`;
-  await chrome.storage.local.remove(cacheKey);
+  await browser.storage.local.remove(cacheKey);
   console.log(`[Repo Detector] Cleared visibility cache for ${owner}/${repo}`);
 }
 
@@ -133,11 +133,11 @@ async function clearRepoVisibilityCache(owner, repo) {
  * @returns {Promise<void>}
  */
 async function clearAllVisibilityCache() {
-  const allData = await chrome.storage.local.get(null);
+  const allData = await browser.storage.local.get(null);
   const visibilityKeys = Object.keys(allData).filter(key => key.startsWith('repo_visibility_'));
 
   if (visibilityKeys.length > 0) {
-    await chrome.storage.local.remove(visibilityKeys);
+    await browser.storage.local.remove(visibilityKeys);
     console.log(`[Repo Detector] Cleared ${visibilityKeys.length} visibility cache entries`);
   }
 }

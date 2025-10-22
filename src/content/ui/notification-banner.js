@@ -20,7 +20,7 @@ async function shouldShowNotification() {
 
   // Check if token is already configured
   try {
-    const stored = await chrome.storage.sync.get('github_token');
+    const stored = await browser.storage.sync.get('github_token');
     if (stored.github_token && stored.github_token.length > 0) {
       return false; // Token already set, no need to show notification
     }
@@ -31,7 +31,7 @@ async function shouldShowNotification() {
 
   // Check dismissal timestamp
   try {
-    const dismissed = await chrome.storage.local.get(NOTIFICATION_DISMISSED_KEY);
+    const dismissed = await browser.storage.local.get(NOTIFICATION_DISMISSED_KEY);
 
     if (!dismissed[NOTIFICATION_DISMISSED_KEY]) {
       return true; // Never dismissed, show it
@@ -81,7 +81,7 @@ async function showTokenNotification() {
 
   // Add event listeners
   banner.querySelector('.notification-configure').addEventListener('click', () => {
-    chrome.runtime.openOptionsPage();
+    browser.runtime.openOptionsPage();
     dismissNotification();
   });
 
@@ -106,7 +106,7 @@ async function dismissNotification() {
 
   // Save dismissal timestamp
   try {
-    await chrome.storage.local.set({
+    await browser.storage.local.set({
       [NOTIFICATION_DISMISSED_KEY]: Date.now()
     });
     console.log('[Notification] Dismissal timestamp saved');
@@ -119,6 +119,6 @@ async function dismissNotification() {
  * Clears the dismissal timestamp (for testing or manual reset)
  */
 async function resetNotificationDismissal() {
-  await chrome.storage.local.remove(NOTIFICATION_DISMISSED_KEY);
+  await browser.storage.local.remove(NOTIFICATION_DISMISSED_KEY);
   console.log('[Notification] Dismissal timestamp cleared');
 }

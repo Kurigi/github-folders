@@ -11,6 +11,12 @@
     "https://raw.githubusercontent.com/*",
     "https://api.github.com/*"
   ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "github-actions-folders@kurigi.dev",
+      "strict_min_version": "109.0"
+    }
+  },
   "action": {
     "default_popup": "src/popup/popup.html",
     "default_icon": {
@@ -20,12 +26,14 @@
     }
   },
   "background": {
+    "scripts": ["lib/browser-polyfill.min.js", "src/background/service-worker.js"],
     "service_worker": "src/background/service-worker.js"
   },
   "content_scripts": [
     {
       "matches": ["https://github.com/*/*/actions*"],
       "js": [
+        "lib/browser-polyfill.min.js",
         "src/content/constants/selectors.js",
         "src/content/constants/config.js",
         "src/content/core/repository-info.js",

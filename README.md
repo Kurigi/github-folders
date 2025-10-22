@@ -3,8 +3,11 @@
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/Kurigi/github-folders/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Available-brightgreen.svg?logo=googlechrome)](https://chromewebstore.google.com/detail/github-actions-folder-org/cjaleaniaichaneokpblfjnafkcahcjo)
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-orange.svg?logo=firefox)](https://github.com/Kurigi/github-folders)
 
 Organize your GitHub Actions workflows into custom folders for better project organization. Works seamlessly with GitHub's interface and supports both public and private repositories.
+
+**Cross-browser compatible:** Available for Chrome, Firefox, and other Chromium-based browsers.
 
 ![Example Screenshot](example.png)
 
@@ -21,17 +24,31 @@ Organize your GitHub Actions workflows into custom folders for better project or
 
 ## Installation
 
-### From Chrome Web Store
+### From Browser Stores
 
-Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/github-actions-folder-org/cjaleaniaichaneokpblfjnafkcahcjo).
+**Chrome / Edge / Brave:**
+Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/github-actions-folder-org/cjaleaniaichaneokpblfjnafkcahcjo)
+
+**Firefox:**
+Coming soon to Firefox Add-ons (submitted for review)
 
 ### Load Locally
 
-1. Download or clone this repository
-2. Open Chrome and go to `chrome://extensions/`
-3. Enable **Developer mode** (toggle in top right)
-4. Click **Load unpacked** and select the `github-actions-folders` directory
-5. Visit any GitHub Actions page to see it in action!
+**Chrome / Chromium-based:**
+1. Download the latest release from [GitHub Releases](https://github.com/Kurigi/github-folders/releases)
+2. Extract the Chrome ZIP file
+3. Open your browser and go to `chrome://extensions/` (or `edge://extensions/`)
+4. Enable **Developer mode** (toggle in top right)
+5. Click **Load unpacked** and select the extracted directory
+6. Visit any GitHub Actions page to see it in action!
+
+**Firefox:**
+1. Download the latest release from [GitHub Releases](https://github.com/Kurigi/github-folders/releases)
+2. Extract the Firefox ZIP file
+3. Open Firefox and go to `about:debugging#/runtime/this-firefox`
+4. Click **Load Temporary Add-on**
+5. Select the `manifest.json` file from the extracted directory
+6. Visit any GitHub Actions page to see it in action!
 
 ## Quick Start
 

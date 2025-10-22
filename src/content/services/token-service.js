@@ -15,7 +15,7 @@ async function saveToken(token) {
     throw new Error('Invalid token: must be a non-empty string');
   }
 
-  await chrome.storage.sync.set({ [TOKEN_STORAGE_KEY]: token });
+  await browser.storage.sync.set({ [TOKEN_STORAGE_KEY]: token });
   console.log('[Token Service] Token saved successfully');
 }
 
@@ -25,7 +25,7 @@ async function saveToken(token) {
  */
 async function getToken() {
   try {
-    const result = await chrome.storage.sync.get(TOKEN_STORAGE_KEY);
+    const result = await browser.storage.sync.get(TOKEN_STORAGE_KEY);
     return result[TOKEN_STORAGE_KEY] || null;
   } catch (error) {
     console.error('[Token Service] Failed to retrieve token:', error);
@@ -38,7 +38,7 @@ async function getToken() {
  * @returns {Promise<void>}
  */
 async function clearToken() {
-  await chrome.storage.sync.remove(TOKEN_STORAGE_KEY);
+  await browser.storage.sync.remove(TOKEN_STORAGE_KEY);
   console.log('[Token Service] Token cleared');
 }
 

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Check if token is configured
   try {
-    const stored = await chrome.storage.sync.get('github_token');
+    const stored = await browser.storage.sync.get('github_token');
 
     if (stored.github_token && stored.github_token.length > 0) {
       tokenStatus.textContent = '✅ Configured';
@@ -26,6 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Open settings page when button is clicked
   openSettingsBtn.addEventListener('click', () => {
-    chrome.runtime.openOptionsPage();
+    browser.runtime.openOptionsPage();
   });
 });
