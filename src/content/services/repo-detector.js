@@ -2,7 +2,6 @@
  * Repository Detector Service
  * Detects whether a repository is public or private
  * Caches results for performance
- * Follows Single Responsibility Principle - only responsible for repo visibility detection
  */
 
 /**
@@ -10,21 +9,18 @@
  * @returns {boolean} True if repository is private, false if public
  */
 function isPrivateRepo() {
-  // Check for private label badge
   const privateLabel = document.querySelector('[data-label-name="private"]');
   if (privateLabel) {
     console.log('[Repo Detector] Private repo detected: private label found');
     return true;
   }
 
-  // Check for lock icon (octicon-lock)
   const lockIcon = document.querySelector('.octicon-lock');
   if (lockIcon) {
     console.log('[Repo Detector] Private repo detected: lock icon found');
     return true;
   }
 
-  // Check for "Private" text in repository header
   const repoHeader = document.querySelector('[itemprop="name"]');
   if (repoHeader) {
     const privateText = Array.from(repoHeader.parentElement.querySelectorAll('*')).find(el =>
@@ -36,7 +32,6 @@ function isPrivateRepo() {
     }
   }
 
-  // Check for private badge in page title area
   const privateBadge = Array.from(document.querySelectorAll('.Label')).find(el =>
     el.textContent.trim().toLowerCase() === 'private'
   );

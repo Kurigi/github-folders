@@ -1,8 +1,6 @@
 /**
- * Permissions Service
- * Checks user permissions for repositories via GitHub API with DOM fallback
- * Uses token-based API when available, falls back to HTML scraping when not
- * Follows Single Responsibility Principle - only responsible for permission checks
+ * Checks user permissions for repositories via GitHub API with DOM fallback.
+ * Uses token-based API when available, falls back to HTML scraping when not.
  */
 
 /**
@@ -68,36 +66,32 @@ async function checkWriteAccessFromHTMLEndpoint(owner, repo, username) {
   console.log('[GitHub Actions Folders] Checking write access by attempting to access settings:', url);
 
   try {
-    // Try to access the repository settings page
-    // This uses session cookies and will redirect if no access
+    // Uses session cookies, will redirect if no access
     const response = await fetch(url, {
-      method: 'HEAD', // Just check if we can access it
-      redirect: 'manual' // Don't follow redirects
+      method: 'HEAD',
+      redirect: 'manual'
     });
 
-    // If we get 200, we have access to settings = write access
     if (response.status === 200) {
       console.log('[GitHub Actions Folders] Write access confirmed: settings page accessible');
       return true;
     }
 
-    // If we get 302/301 redirect, likely redirecting to login or repo home = no access
     if (response.status === 301 || response.status === 302 || response.status === 303) {
       console.log('[GitHub Actions Folders] No write access: settings page redirected');
       return false;
     }
 
-    // 404 means settings page doesn't exist or no access
     if (response.status === 404 || response.status === 403) {
       console.log('[GitHub Actions Folders] No write access: settings page forbidden/not found');
       return false;
     }
 
     console.warn('[GitHub Actions Folders] Unexpected response status:', response.status);
-    return null; // Unknown state, fall back to DOM
+    return null;
   } catch (error) {
     console.warn('[GitHub Actions Folders] Failed to check write access via settings page:', error);
-    return null; // Error, fall back to DOM
+    return null;
   }
 }
 
@@ -109,7 +103,6 @@ async function checkWriteAccessFromHTMLEndpoint(owner, repo, username) {
  * @returns {Promise<boolean>} True if user has write access, false otherwise
  */
 async function checkWriteAccess(owner, repo) {
-  // Get username from meta tag
   const username = getCurrentUsername();
 
   if (username) {
@@ -123,11 +116,9 @@ async function checkWriteAccess(owner, repo) {
 
     console.log('[GitHub Actions Folders] API check not available, trying HTML endpoint');
 
-    // Try settings page access check (fallback)
     const htmlResult = await checkWriteAccessFromHTMLEndpoint(owner, repo, username);
 
     if (htmlResult !== null) {
-      // HTML check succeeded (either true or false)
       console.log('[GitHub Actions Folders] Write access determined via HTML endpoint:', htmlResult);
       return htmlResult;
     }
@@ -135,7 +126,7 @@ async function checkWriteAccess(owner, repo) {
     console.log('[GitHub Actions Folders] HTML permission check failed, falling back to DOM');
   }
 
-  // Final fallback: DOM permission check
+  // Final fallback: DOM inspection
   return checkWriteAccessFromDOM();
 }
 
@@ -145,7 +136,6 @@ async function checkWriteAccess(owner, repo) {
  * @returns {boolean} True if write access detected, false otherwise
  */
 function checkWriteAccessFromDOM() {
-  // Check if user is logged in by looking for the user menu
   const userMenu = document.querySelector('[data-target="user-avatar-button.menu"]');
   if (!userMenu) {
     console.log('[GitHub Actions Folders] User not logged in (no avatar menu found)');
@@ -154,7 +144,7 @@ function checkWriteAccessFromDOM() {
 
   console.log('[GitHub Actions Folders] User is logged in, checking for write access indicators');
 
-  // Primary check: Settings tab in repository navigation (most reliable)
+  // Primary check: Settings tab (most reliable)
   const repoNav = document.querySelector('nav[aria-label="Repository"]');
   if (repoNav) {
     const settingsLink = Array.from(repoNav.querySelectorAll('a')).find(a =>
@@ -166,7 +156,7 @@ function checkWriteAccessFromDOM() {
     }
   }
 
-  // Secondary checks: Other write access indicators
+  // Fallback: Other write access indicators
   const writeAccessIndicators = [
     { selector: '[data-hotkey="t"]', name: 'Go to file hotkey' },
     { selector: 'summary[data-hotkey="."]', name: 'Open in github.dev hotkey' },
@@ -222,7 +212,6 @@ async function getDefaultBranchViaAPI(owner, repo) {
  * @returns {Promise<string>} Default branch name (e.g., 'main' or 'master')
  */
 async function getDefaultBranch(owner, repo) {
-  // Try API first
   const apiResult = await getDefaultBranchViaAPI(owner, repo);
 
   if (apiResult) {
@@ -231,9 +220,8 @@ async function getDefaultBranch(owner, repo) {
 
   console.log('[GitHub Actions Folders] API branch detection not available, falling back to HTML parsing');
 
-  // Fallback: HTML parsing
   try {
-    // Fetch the repository home page (uses session cookies for private repos)
+    // Uses session cookies for private repos
     const url = `https://github.com/${owner}/${repo}`;
     console.log('[GitHub Actions Folders] Fetching default branch from repo page:', url);
 
@@ -242,7 +230,7 @@ async function getDefaultBranch(owner, repo) {
     if (response.ok) {
       const html = await response.text();
 
-      // Look for defaultBranch in JSON data embedded in the page
+      // Look for embedded JSON data
       const defaultBranchMatch = html.match(/"defaultBranch":"([^"]+)"/);
       if (defaultBranchMatch && defaultBranchMatch[1]) {
         const branchName = defaultBranchMatch[1];
@@ -250,7 +238,7 @@ async function getDefaultBranch(owner, repo) {
         return branchName;
       }
 
-      // Fallback: Look for refs/heads/branch pattern
+      // Fallback: refs/heads/ pattern
       const refsMatch = html.match(/refs\/heads\/([^"'\s<>]+)/);
       if (refsMatch && refsMatch[1] && !refsMatch[1].includes('.zip')) {
         const branchName = refsMatch[1];
@@ -262,7 +250,6 @@ async function getDefaultBranch(owner, repo) {
     console.warn('[GitHub Actions Folders] Failed to fetch default branch from HTML:', error);
   }
 
-  // Fallback to main
   console.log('[GitHub Actions Folders] Could not detect branch, using default: main');
   return 'main';
 }
@@ -275,11 +262,9 @@ async function getDefaultBranch(owner, repo) {
  * @returns {Promise<string>} URL to GitHub's file creation page
  */
 async function buildConfigCreationUrl(owner, repo, defaultBranch = null) {
-  // Auto-detect branch if not provided
   const branch = defaultBranch || await getDefaultBranch(owner, repo);
   const filename = '.github/actions-folders.json';
 
-  // Template configuration
   const template = {
     folders: [
       {

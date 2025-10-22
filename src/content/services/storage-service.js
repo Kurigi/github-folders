@@ -1,7 +1,6 @@
 /**
  * Storage Service
  * Abstraction over Chrome Storage API
- * Follows Dependency Inversion Principle - provides abstraction for storage operations
  */
 
 /**
@@ -14,7 +13,6 @@ async function getExtensionEnabled(owner, repo) {
   const key = `enabled_${owner}_${repo}`;
   return new Promise((resolve) => {
     chrome.storage.local.get([key], (result) => {
-      // Default to enabled if not set
       resolve(result[key] !== false);
     });
   });
@@ -46,7 +44,6 @@ async function getFolderStates(owner, repo) {
   const key = `folder_states_${owner}_${repo}`;
   return new Promise((resolve) => {
     chrome.storage.local.get([key], (result) => {
-      // Default to empty object if not set
       resolve(result[key] || {});
     });
   });
@@ -62,14 +59,9 @@ async function getFolderStates(owner, repo) {
  */
 async function setFolderState(owner, repo, folderName, isExpanded) {
   const key = `folder_states_${owner}_${repo}`;
-
-  // Get current states
   const states = await getFolderStates(owner, repo);
-
-  // Update the specific folder state
   states[folderName] = isExpanded;
 
-  // Save back to storage
   return new Promise((resolve) => {
     chrome.storage.local.set({ [key]: states }, () => {
       resolve();
@@ -88,11 +80,10 @@ async function getAllRepositoriesWithStates() {
 
       for (const key in items) {
         if (key.startsWith('folder_states_')) {
-          // Extract owner/repo from key format: folder_states_owner_repo
           const parts = key.replace('folder_states_', '').split('_');
           if (parts.length >= 2) {
             const owner = parts[0];
-            const repo = parts.slice(1).join('_'); // Handle repos with underscores
+            const repo = parts.slice(1).join('_');
             repos.push({ owner, repo });
           }
         }

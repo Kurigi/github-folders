@@ -1,7 +1,6 @@
 /**
  * Messaging Service
  * Abstraction over Chrome Runtime Messaging API
- * Follows Dependency Inversion Principle - provides abstraction for service worker communication
  */
 
 /**
@@ -28,8 +27,6 @@ async function sendMessage(message) {
 async function extractWorkflowsFromDOM() {
   console.log('[GitHub Actions Folders] Extracting workflows from DOM');
 
-  // Find the "Show more workflows" button and click it if it exists
-  // Look for buttons that contain "show more" or "Show more workflows" text
   const buttons = Array.from(document.querySelectorAll('button'));
   const showMoreButton = buttons.find(btn =>
     btn.textContent.toLowerCase().includes('show more')
@@ -38,11 +35,9 @@ async function extractWorkflowsFromDOM() {
   if (showMoreButton) {
     console.log('[GitHub Actions Folders] Found "Show more" button, clicking it');
     showMoreButton.click();
-    // Wait for the DOM to update after clicking
     await new Promise(resolve => setTimeout(resolve, 500));
   }
 
-  // Find all workflow links in the sidebar
   const workflowLinks = document.querySelectorAll('nav[aria-label="Actions Workflows"] a[href*="/actions/workflows/"]');
 
   const workflows = [];
@@ -50,15 +45,13 @@ async function extractWorkflowsFromDOM() {
     const name = link.textContent.trim();
     const href = link.getAttribute('href');
 
-    // Extract workflow filename from URL
-    // Format: /owner/repo/actions/workflows/filename.yml
+    // Extract workflow filename from URL (format: /owner/repo/actions/workflows/filename.yml)
     const match = href.match(/\/actions\/workflows\/([^?]+)/);
     if (match && match[1]) {
       workflows.push({
         name: name,
         path: `.github/workflows/${match[1]}`,
         state: 'active',
-        // These fields match the API response format
         id: workflows.length + 1,
         node_id: '',
         badge_url: '',
@@ -85,7 +78,6 @@ async function extractWorkflowsFromDOM() {
  */
 async function fetchWorkflows(owner, repo) {
   try {
-    // Try API first (works for public repos)
     console.log(`[GitHub Actions Folders] Fetching workflows via API for ${owner}/${repo}`);
     const response = await sendMessage({
       action: 'fetchWorkflows',
@@ -98,12 +90,10 @@ async function fetchWorkflows(owner, repo) {
       return response;
     } else {
       console.log(`[GitHub Actions Folders] Workflows API failed for ${owner}/${repo} (likely private repo), falling back to DOM extraction`);
-      // Fallback to DOM extraction for private repos
       return await extractWorkflowsFromDOM();
     }
   } catch (error) {
     console.log(`[GitHub Actions Folders] Workflows API error for ${owner}/${repo}: ${error.message}, falling back to DOM extraction`);
-    // Fallback to DOM extraction
     return await extractWorkflowsFromDOM();
   }
 }

@@ -2,7 +2,7 @@
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/Kurigi/github-folders/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Chrome Web Store](https://img.shields.io/badge/chrome-extension-blue.svg)](https://github.com/Kurigi/github-folders)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Available-brightgreen.svg?logo=googlechrome)](https://chromewebstore.google.com/detail/github-actions-folder-org/cjaleaniaichaneokpblfjnafkcahcjo)
 
 Organize your GitHub Actions workflows into custom folders for better project organization. Works seamlessly with GitHub's interface and supports both public and private repositories.
 
@@ -21,9 +21,9 @@ Organize your GitHub Actions workflows into custom folders for better project or
 
 ## Installation
 
-### From Chrome Web Store (Coming Soon)
+### From Chrome Web Store
 
-*Extension will be available on the Chrome Web Store soon.*
+Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/github-actions-folder-org/cjaleaniaichaneokpblfjnafkcahcjo).
 
 ### Load Locally
 

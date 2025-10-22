@@ -1,7 +1,6 @@
 /**
  * Token Service
  * Manages GitHub API token storage, validation, and retrieval
- * Follows Single Responsibility Principle - only responsible for token management
  */
 
 const TOKEN_STORAGE_KEY = 'github_token';
@@ -54,7 +53,6 @@ function validateTokenFormat(token) {
     return false;
   }
 
-  // Check for common GitHub token prefixes
   const validPrefixes = ['ghp_', 'gho_', 'ghs_', 'github_pat_'];
   const hasValidPrefix = validPrefixes.some(prefix => token.startsWith(prefix));
 
@@ -63,7 +61,6 @@ function validateTokenFormat(token) {
     return false;
   }
 
-  // Basic length check (GitHub tokens are typically 40+ characters)
   if (token.length < 20) {
     console.warn('[Token Service] Token appears too short');
     return false;

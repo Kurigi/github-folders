@@ -4,11 +4,8 @@
  * Supports optional GitHub token for better performance and private repo access
  */
 
-// Import utilities (note: in Manifest V3, we need to use importScripts or inline code)
-// For simplicity, we'll inline the essential functions here
-
 const CONFIG_FILE_PATH = '.github/actions-folders.json';
-const CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION_MS = 5 * 60 * 1000;
 const TOKEN_STORAGE_KEY = 'github_token';
 
 /**
@@ -39,11 +36,10 @@ function trackRateLimit(headers) {
       rate_limit: {
         limit: parseInt(limit),
         remaining: parseInt(remaining),
-        reset: parseInt(reset) * 1000 // Convert to ms
+        reset: parseInt(reset) * 1000
       }
     });
 
-    // Log warning if low
     if (parseInt(remaining) < 100) {
       console.warn(`[Service Worker] Rate limit low: ${remaining}/${limit}`);
     }
@@ -65,7 +61,6 @@ async function fetchWorkflows(owner, repo) {
   const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows`;
   const token = await getToken();
 
-  // Build headers
   const headers = {
     'Accept': 'application/vnd.github+json',
     'X-GitHub-Api-Version': '2022-11-28'
@@ -80,8 +75,6 @@ async function fetchWorkflows(owner, repo) {
 
   try {
     const response = await fetch(url, { headers });
-
-    // Track rate limits
     trackRateLimit(response.headers);
 
     if (!response.ok) {
@@ -107,14 +100,10 @@ async function fetchWorkflows(owner, repo) {
 
 /**
  * Attempts to fetch the config file from multiple default branches
- * Uses token authentication if available for private repos
+ * Note: raw.githubusercontent.com relies on browser session auth, not API tokens
  */
 async function fetchConfigFromBranches(owner, repo) {
   const branches = ['main', 'master'];
-
-  // Note: raw.githubusercontent.com for public repos doesn't use Bearer tokens
-  // It relies on browser session for private repos
-  // Token authentication is only for api.github.com endpoints
 
   for (const branch of branches) {
     try {
@@ -145,12 +134,10 @@ async function fetchConfigWithCache(owner, repo) {
   const cacheTimestampKey = `${cacheKey}_timestamp`;
 
   try {
-    // Check cache
     const cached = await chrome.storage.local.get([cacheKey, cacheTimestampKey]);
     const cachedContent = cached[cacheKey];
     const cachedTimestamp = cached[cacheTimestampKey];
 
-    // Return cached if valid
     if (cachedContent && cachedTimestamp) {
       const age = Date.now() - cachedTimestamp;
       if (age < CACHE_DURATION_MS) {
@@ -163,11 +150,9 @@ async function fetchConfigWithCache(owner, repo) {
       }
     }
 
-    // Fetch fresh content
     console.log(`[Service Worker] Fetching fresh config for ${owner}/${repo}`);
     const content = await fetchConfigFromBranches(owner, repo);
 
-    // Cache the result
     await chrome.storage.local.set({
       [cacheKey]: content,
       [cacheTimestampKey]: Date.now()
@@ -197,7 +182,6 @@ async function fetchRepoInfo(owner, repo) {
   const url = `https://api.github.com/repos/${owner}/${repo}`;
   const token = await getToken();
 
-  // Build headers
   const headers = {
     'Accept': 'application/vnd.github+json',
     'X-GitHub-Api-Version': '2022-11-28'
@@ -209,8 +193,6 @@ async function fetchRepoInfo(owner, repo) {
 
   try {
     const response = await fetch(url, { headers });
-
-    // Track rate limits
     trackRateLimit(response.headers);
 
     if (response.ok) {
@@ -268,12 +250,10 @@ async function checkUserPermission(owner, repo, username) {
       }
     });
 
-    // Track rate limits
     trackRateLimit(response.headers);
 
     if (response.ok) {
       const data = await response.json();
-      // data.permission can be: "admin", "write", "read", "none"
       const hasWriteAccess = ['admin', 'write'].includes(data.permission);
 
       console.log(`[Service Worker] Permission check for ${username}: ${data.permission}`);
@@ -310,7 +290,6 @@ async function clearConfigCache(owner, repo) {
   console.log(`[Service Worker] Cache cleared for ${owner}/${repo}`);
 }
 
-// Message listener
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('[Service Worker] Received message:', request);
 
@@ -325,7 +304,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       return;
     }
 
-    // Handle async response
     fetchConfigWithCache(owner, repo)
       .then(result => {
         console.log('[Service Worker] Sending response:', result.success ? 'success' : 'failed');
@@ -339,7 +317,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         });
       });
 
-    // Return true to indicate we'll send response asynchronously
     return true;
   }
 
@@ -443,5 +420,4 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 });
 
-// Log when service worker is activated
 console.log('[Service Worker] GitHub Actions Folder Organizer service worker loaded');
